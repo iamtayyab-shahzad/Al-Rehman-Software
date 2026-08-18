@@ -3,6 +3,16 @@ import { shop } from "@/lib/shop";
 import type { Category, Offer, Product, Settings } from "@/types";
 
 const now = "2026-07-19T00:00:00.000Z";
+type MenuPromo = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  active: boolean;
+  startDate: string;
+  endDate: string;
+};
+const promotions = catalog.promotions as MenuPromo[];
 const categoryBySlug = new Map(
   catalog.categories.map((category) => [category.slug, category]),
 );
@@ -69,7 +79,7 @@ export const krunchiesProducts: Product[] = catalog.products.map(
 );
 
 export const krunchiesOffers: Offer[] = [
-  ...catalog.promotions.map((promo) => ({
+  ...promotions.map((promo) => ({
     id: promo.id,
     created_at: now,
     updated_at: now,

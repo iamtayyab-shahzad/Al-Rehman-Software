@@ -372,10 +372,10 @@ export default function ProductsPage() {
               />
             </div>
             <div className="space-y-1">
-              <Label>Image URL or Upload</Label>
+              <Label>Image</Label>
               <Input
-                value={form.image.startsWith("data:") ? "" : form.image}
-                placeholder="https://... or /products/..."
+                value={form.image}
+                placeholder="Cloudinary URL after upload"
                 onChange={(e) => setForm({ ...form, image: e.target.value })}
               />
               <Input
@@ -388,11 +388,10 @@ export default function ProductsPage() {
                 }}
               />
               <p className="text-xs text-zinc-500">
-                Max ~400KB after auto-resize (up to 1200px). Large phone photos
-                are compressed automatically.
+                Compressed locally, then uploaded to Cloudinary.
               </p>
-              {form.image.startsWith("data:") ? (
-                <p className="text-xs text-emerald-500">Optimized image ready</p>
+              {form.image.startsWith("https://") ? (
+                <p className="text-xs text-emerald-500">Cloudinary image ready</p>
               ) : null}
             </div>
 

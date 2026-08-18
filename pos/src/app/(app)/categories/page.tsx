@@ -163,11 +163,11 @@ export default function CategoriesPage() {
               />
             </div>
             <div className="space-y-1">
-              <Label>Image URL / Upload</Label>
+              <Label>Image</Label>
               <Input
-                value={form.image.startsWith("data:") ? "" : form.image}
+                value={form.image}
                 onChange={(e) => setForm({ ...form, image: e.target.value })}
-                placeholder="https://... or /products/..."
+                placeholder="Cloudinary URL after upload"
               />
               <Input
                 type="file"
@@ -195,7 +195,7 @@ export default function CategoriesPage() {
                 }}
               />
               <p className="text-xs text-zinc-500">
-                Max ~400KB after auto-resize (up to 1200px).
+                Compressed locally, then uploaded to Cloudinary.
               </p>
             </div>
             <div className="space-y-1">
