@@ -9,8 +9,9 @@ type Product struct {
 	Name         string        `gorm:"size:150;not null" json:"name"`
 	Description  string        `gorm:"type:text" json:"description"`
 	Image        string        `gorm:"type:text" json:"image"`
-	Featured     bool          `gorm:"not null;default:false" json:"featured"`
-	Available    bool          `gorm:"not null;default:true" json:"available"`
-	DisplayOrder int           `gorm:"not null;default:0" json:"display_order"`
+	Featured          bool          `gorm:"not null;default:false" json:"featured"`
+	Available         bool          `gorm:"not null;default:true" json:"available"`
+	AllowManualPrice  bool          `gorm:"not null;default:false" json:"allow_manual_price"`
+	DisplayOrder      int           `gorm:"not null;default:0" json:"display_order"`
 	Sizes        []ProductSize `gorm:"foreignKey:ProductID" json:"sizes,omitempty"`
 }

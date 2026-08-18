@@ -26,6 +26,8 @@ type CreateOrderItemRequest struct {
 	ProductID     uuid.UUID `json:"product_id" binding:"required"`
 	ProductSizeID uuid.UUID `json:"product_size_id" binding:"required"`
 	Quantity      int       `json:"quantity" binding:"required,min=1"`
+	// Price is honoured only for staff orders when the product allows manual pricing.
+	Price               *int   `json:"price" binding:"omitempty,min=1"`
 	SpecialInstructions string `json:"special_instructions" binding:"max=1000"`
 }
 
