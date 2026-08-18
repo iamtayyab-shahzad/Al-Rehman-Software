@@ -1,0 +1,30 @@
+{
+  "name": "Al-rehman Fast Food",
+  "shortName": "Al-rehman",
+  "tagline": "Maza he Maza",
+  "phone": "03013095109",
+  "alternatePhone": "",
+  "whatsapp": "923013095109",
+  "openingTime": "11:00 AM",
+  "closingTime": "12:00 AM",
+  "currency": "Rs",
+  "address": "",
+  "deliveryNote": "Call now for delivery",
+  "thankYouNote": "THANK YOU FOR CHOOSING AL-REHMAN FAST FOOD!",
+  "contactPerson": "ZIA KHAN Musa Khel",
+  "siteUrl": "http://localhost:3000",
+  "orderPrefix": "AR",
+  "storageKeyPrefix": "alrehman",
+  "posDbName": "alrehman-pos",
+  "defaultSiteTheme": "dark",
+  "logo": "/logo.svg",
+  "payments": {
+    "qrSrc": "",
+    "tillId": "",
+    "raastId": "",
+    "iban": "",
+    "jazzcashNumber": "",
+    "accountName": "",
+    "jazzcashUssd": ""
+  }
+}

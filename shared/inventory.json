@@ -1,0 +1,5 @@
+{
+  "restaurant": "Al-rehman Fast Food",
+  "note": "Inventory items cleared for now — log stock buys on Expenses instead. When ready to track ingredients again, add items here and run: go run ./cmd/seedinventory from backend/",
+  "items": []
+}
