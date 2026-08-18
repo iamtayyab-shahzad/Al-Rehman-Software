@@ -1,26 +1,26 @@
-/** Soft-drink bottle sizes that require a brand/flavor pick. */
-export const DRINK_FLAVOR_PRODUCT_IDS = new Set([
-  "20000000-0000-4000-8000-000000000082", // 500 ml
-  "20000000-0000-4000-8000-000000000083", // 1 Liter
-  "20000000-0000-4000-8000-000000000084", // 1.5 Liter
-  "20000000-0000-4000-8000-000000000085", // 2.25 Liter
-]);
-
 export const DEFAULT_DRINK_FLAVORS = ["Coke", "Sprite", "Fanta"];
 
 export function requiresDrinkFlavor(product: {
   id?: string;
   name?: string;
+  description?: string;
 }): boolean {
-  if (product.id && DRINK_FLAVOR_PRODUCT_IDS.has(product.id)) return true;
-  const n = (product.name || "").toLowerCase().replace(/\s+/g, " ").trim();
+  const n = `${product.name || ""} ${product.description || ""}`
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
   if (!n.includes("drink")) return false;
   return (
     n.includes("500 ml") ||
     n.includes("500ml") ||
     n.includes("1 liter") ||
+    n.includes("1 litre") ||
     n.includes("1.5 liter") ||
-    n.includes("2.25 liter")
+    n.includes("2.25 liter") ||
+    n.includes("regular drink") ||
+    n.includes("ltr drink") ||
+    n.includes("liter drink") ||
+    n.includes("litre drink")
   );
 }
 

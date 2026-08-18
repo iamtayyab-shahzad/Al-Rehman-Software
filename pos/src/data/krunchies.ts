@@ -1,4 +1,5 @@
-import catalog from "./krunchies-menu.json";
+import catalog from "./menu.json";
+import { shop } from "@/lib/shop";
 import type { Category, Offer, Product, Settings } from "@/types";
 
 const now = "2026-07-19T00:00:00.000Z";
@@ -115,9 +116,11 @@ export const krunchiesSettings: Settings = {
   created_at: now,
   updated_at: now,
   restaurant_name: catalog.restaurant.name,
-  phone: `${catalog.restaurant.phone} / ${catalog.restaurant.alternatePhone}`,
+  phone: [catalog.restaurant.phone, catalog.restaurant.alternatePhone]
+    .filter(Boolean)
+    .join(" / "),
   whatsapp: catalog.restaurant.whatsapp,
-  logo: "",
+  logo: shop.logo,
   opening_time: catalog.restaurant.openingTime,
   closing_time: catalog.restaurant.closingTime,
   cash_on_delivery_fee: 50,

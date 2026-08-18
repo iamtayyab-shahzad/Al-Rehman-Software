@@ -1,13 +1,13 @@
+import { shop } from "@/lib/shop";
+
 /**
- * One cashier window only. A second tab/window must not run a second sync
- * engine against the same IndexedDB.
- *
- * Rule: keep the window that is already alive. The new one closes itself.
- * If the old window is dead (no heartbeat), the new one becomes leader.
+ * Prefer one sync engine per browser profile so two tills on the same PC
+ * do not double-push the offline queue. Two separate computers are both
+ * leaders and both sync to the API.
  */
 
-export const POS_INSTANCE_CHANNEL = "krunchies-pos-single";
-export const POS_LEADER_STORAGE_KEY = "krunchies-pos-leader-beat";
+export const POS_INSTANCE_CHANNEL = `${shop.storageKeyPrefix}-pos-single`;
+export const POS_LEADER_STORAGE_KEY = `${shop.storageKeyPrefix}-pos-leader-beat`;
 export const POS_HEARTBEAT_MS = 1500;
 export const POS_LEADER_STALE_MS = 4000;
 export const POS_CLAIM_WAIT_MS = 600;

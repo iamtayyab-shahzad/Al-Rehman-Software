@@ -178,9 +178,9 @@ export default function CategoriesPage() {
                   if (!file) return;
                   void (async () => {
                     try {
-                      toast.message("Optimizing image…");
+                      toast.message("Uploading image…");
                       const prepared = await prepareProductImage(file);
-                      setForm((f) => ({ ...f, image: prepared.dataUrl }));
+                      setForm((f) => ({ ...f, image: prepared.url }));
                       toast.success(
                         `Image ready (~${Math.round(prepared.bytesApprox / 1024)}KB)`,
                       );

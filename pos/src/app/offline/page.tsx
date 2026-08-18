@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { shop } from "@/lib/shop";
 
 export default function OfflinePage() {
   const [redirecting, setRedirecting] = useState(false);
@@ -33,7 +33,7 @@ export default function OfflinePage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black px-6 text-center text-white">
-      <h1 className="text-3xl font-black text-orange-500">Krunchies POS</h1>
+      <h1 className="text-3xl font-black text-orange-500">{shop.shortName} POS</h1>
       <p className="mt-3 max-w-md text-zinc-400">
         {redirecting
           ? "Opening cached POS…"

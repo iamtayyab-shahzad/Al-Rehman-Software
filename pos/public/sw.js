@@ -4,7 +4,7 @@
  * Core screens serve from cache / fail fast so the UI opens immediately;
  * React Query + IndexedDB still load live data in the background.
  */
-const CACHE_VERSION = "krunchies-pos-v7";
+const CACHE_VERSION = "alrehman-pos-v1";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const PRODUCT_CACHE = `${CACHE_VERSION}-products`;
@@ -83,7 +83,7 @@ self.addEventListener("activate", (event) => {
         keys
           .filter(
             (k) =>
-              k.startsWith("krunchies-pos-") && !k.startsWith(CACHE_VERSION),
+              k.startsWith("alrehman-pos-") && !k.startsWith(CACHE_VERSION),
           )
           .map((k) => caches.delete(k)),
       );

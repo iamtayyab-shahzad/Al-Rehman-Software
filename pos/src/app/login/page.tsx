@@ -13,6 +13,7 @@ import { setToken } from "@/lib/api-client";
 import { TOKEN_KEY, isTokenExpired, isOfflineSessionValid } from "@/lib/utils";
 import { isOnline } from "@/lib/network";
 import { authApi, sessionRepo, syncKrunchiesMenu } from "@/services/api";
+import { shop } from "@/lib/shop";
 import { useEffect, useState } from "react";
 
 const schema = z.object({
@@ -111,7 +112,7 @@ export default function LoginPage() {
       >
         <div>
           <h1 className="text-3xl font-black text-white">
-            <span className="text-orange-500">Krunchies</span> POS
+            <span className="text-orange-500">{shop.shortName}</span> POS
           </h1>
           <p className="mt-2 text-zinc-400">Staff login</p>
           {offline ? (

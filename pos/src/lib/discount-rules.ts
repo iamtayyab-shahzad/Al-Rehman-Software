@@ -203,3 +203,61 @@ export function anyRuleMatchesToday(
 ): boolean {
   return rules.some((r) => r.active && ruleMatchesSchedule(r, date));
 }
+
+let cachedRules: DiscountRule[] = [];
+
+/** Update in-memory rules (from API / IndexedDB cache). */
+export function setDiscountRulesCache(rules: DiscountRule[]) {
+  cachedRules = Array.isArray(rules) ? rules.filter((r) => r.active) : [];
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("discount-rules-updated"));
+  }
+}
+
+export function getDiscountRulesCache(): DiscountRule[] {
+  return cachedRules;
+}
+
+export type ActivePromoInfo = {
+  name: string;
+  min_subtotal: number;
+  percent: number;
+};
+
+export function activePromoInfo(
+  lines?: PromoLine[],
+  date = new Date(),
+): ActivePromoInfo | null {
+  const rule = bestMatchingRule(cachedRules, date, lines);
+  if (!rule?.name) return null;
+  return {
+    name: rule.name,
+    min_subtotal: rule.min_subtotal || 0,
+    percent: rule.percent,
+  };
+}
+
+export function isWeekendPromoDay(date = new Date()): boolean {
+  return anyRuleMatchesToday(cachedRules, date);
+}
+
+export function weekendDiscount(lines: PromoLine[], date = new Date()): number {
+  return discountFromRules(cachedRules, lines, date);
+}
+
+export function weekendPromoLabel(
+  linesOrDate?: PromoLine[] | Date,
+  date = new Date(),
+): string | null {
+  if (linesOrDate instanceof Date) {
+    return activePromoInfo(undefined, linesOrDate)?.name || null;
+  }
+  if (Array.isArray(linesOrDate)) {
+    return (
+      bestDiscountLabel(cachedRules, linesOrDate, date) ||
+      activePromoInfo(linesOrDate, date)?.name ||
+      null
+    );
+  }
+  return activePromoInfo(undefined, date)?.name || null;
+}

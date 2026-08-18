@@ -31,6 +31,8 @@ import {
 } from "@/lib/sync-engine";
 import { setToken } from "@/lib/api-client";
 import { usePosTheme } from "@/context/theme-context";
+import { shop } from "@/lib/shop";
+import { mediaUrl } from "@/lib/media";
 
 const LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -84,14 +86,14 @@ export function Sidebar() {
         <p className="flex items-center gap-2 text-lg font-black text-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/icon-192.png"
+            src={mediaUrl(shop.logo || "/logo.svg", { width: 80 })}
             alt=""
             width={28}
             height={28}
             className="h-7 w-7 rounded-full object-cover"
           />
           <span>
-            <span className="text-orange-500">Krunchies</span> POS
+            <span className="text-orange-500">{shop.shortName}</span> POS
           </span>
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">

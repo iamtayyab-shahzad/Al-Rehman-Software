@@ -20,6 +20,7 @@ import {
 import { useBill } from "@/context/bill-context";
 import { useMenuSearch } from "@/context/menu-search-context";
 import { requiresDealFlavorChoice } from "@/lib/deal-flavors";
+import { mediaUrl } from "@/lib/media";
 import { requiresDrinkFlavor } from "@/lib/drink-flavors";
 import {
   isPizzaProduct,
@@ -41,7 +42,7 @@ import {
   WALKIN_LOCATION_ID,
 } from "@/lib/utils";
 import { printCustomerReceipt, printKitchenReceipt, encodeKitchenInstructions } from "@/lib/receipt";
-import { activePromoInfo, weekendPromoLabel } from "@/lib/weekend-promo";
+import { activePromoInfo, weekendPromoLabel } from "@/lib/discount-rules";
 import { deleteDraft } from "@/lib/offline-db";
 import { ordersShareIdentity } from "@/lib/order-identity";
 import { PhoneSuggest } from "@/components/phone-suggest";
@@ -976,7 +977,7 @@ function ProductTile({
         <div className="relative aspect-[4/3] bg-zinc-900">
           {product.image ? (
             <Image
-              src={product.image}
+              src={mediaUrl(product.image, { width: 400 })}
               alt={product.name}
               fill
               unoptimized

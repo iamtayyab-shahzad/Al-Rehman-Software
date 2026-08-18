@@ -29,18 +29,7 @@ export function getDiscountRulesCache(): DiscountRule[] {
 }
 
 function legacyFallbackRules(): DiscountRule[] {
-  return [
-    {
-      name: "Fri & Sun 10% off",
-      active: true,
-      percent: 10,
-      min_subtotal: 1000,
-      schedule_type: "weekdays",
-      end_date: WEEKEND_PROMO_END_DATE,
-      weekdays_json: "[5,0]",
-      exclude_deals: true,
-    },
-  ];
+  return [];
 }
 
 function rulesOrLegacy(): DiscountRule[] {

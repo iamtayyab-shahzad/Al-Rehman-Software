@@ -3,7 +3,8 @@ import { twMerge } from "tailwind-merge";
 import type { BillLine, Order, OrderItem, OrderType, PaymentMethod } from "@/types";
 import { isDealProduct } from "@/lib/deal-flavors";
 import { isPizzaSizeLabel } from "@/lib/is-pizza";
-import { weekendDiscount } from "@/lib/weekend-promo";
+import { weekendDiscount } from "@/lib/discount-rules";
+import { storageKey } from "@/lib/shop";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -193,8 +194,8 @@ export const ORDER_TYPES = [
   { id: "phone" as const, label: "Phone Order" },
 ];
 
-export const TOKEN_KEY = "krunchies_pos_token";
-export const LAST_RECEIPT_KEY = "krunchies_pos_last_receipt";
+export const TOKEN_KEY = storageKey("pos_token");
+export const LAST_RECEIPT_KEY = storageKey("pos_last_receipt");
 
 // ---------------------------------------------------------------------------
 // Pakistani mobile number helpers

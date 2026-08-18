@@ -1,13 +1,16 @@
-/** Client-side image guard: resize + compress so uploads stay light for the live site. */
+/** Compress locally, then upload to Cloudinary via the API. Store the URL only. */
+
+import { TOKEN_KEY } from "@/lib/utils";
 
 export const IMAGE_MAX_EDGE_PX = 1200;
 export const IMAGE_MAX_OUTPUT_BYTES = 400 * 1024; // ~400KB after compress
-export const IMAGE_MAX_INPUT_BYTES = 8 * 1024 * 1024; // reject huge phone dumps early
-/** Base64 data-URL length cap (~400KB binary ≈ 560KB text + header). */
-export const IMAGE_MAX_DATA_URL_CHARS = 750_000;
+export const IMAGE_MAX_INPUT_BYTES = 8 * 1024 * 1024;
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
 export type PreparedImage = {
-  dataUrl: string;
+  url: string;
   width: number;
   height: number;
   bytesApprox: number;
@@ -46,34 +49,9 @@ function canvasToBlob(
   });
 }
 
-function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("Could not encode image"));
-    reader.readAsDataURL(blob);
-  });
-}
-
-/**
- * Rejects oversized data-URL / path strings before they hit the API.
- * Paths like `/products/...` are always fine.
- */
-export function assertImageFieldSafe(image: string): void {
-  const value = (image || "").trim();
-  if (!value) return;
-  if (value.startsWith("data:") && value.length > IMAGE_MAX_DATA_URL_CHARS) {
-    throw new Error(
-      "Image data is too large. Upload a smaller photo (auto-compress max ~400KB).",
-    );
-  }
-}
-
-/**
- * Resize + compress a local image for product/menu/logo use.
- * Throws a short, staff-friendly Error when the file is unsuitable.
- */
-export async function prepareProductImage(file: File): Promise<PreparedImage> {
+async function compressToBlob(
+  file: File,
+): Promise<{ blob: Blob; width: number; height: number }> {
   if (!file.type.startsWith("image/")) {
     throw new Error("Please choose an image file (JPG, PNG, or WebP)");
   }
@@ -99,7 +77,6 @@ export async function prepareProductImage(file: File): Promise<PreparedImage> {
   ctx.drawImage(img, 0, 0, width, height);
 
   const types = ["image/webp", "image/jpeg"];
-
   let best: Blob | null = null;
   for (const type of types) {
     for (const quality of [0.82, 0.72, 0.62, 0.5]) {
@@ -107,13 +84,7 @@ export async function prepareProductImage(file: File): Promise<PreparedImage> {
         const blob = await canvasToBlob(canvas, type, quality);
         if (!best || blob.size < best.size) best = blob;
         if (blob.size <= IMAGE_MAX_OUTPUT_BYTES) {
-          const dataUrl = await blobToDataUrl(blob);
-          return {
-            dataUrl,
-            width,
-            height,
-            bytesApprox: blob.size,
-          };
+          return { blob, width, height };
         }
       } catch {
         /* try next */
@@ -122,11 +93,63 @@ export async function prepareProductImage(file: File): Promise<PreparedImage> {
   }
 
   if (best && best.size <= IMAGE_MAX_OUTPUT_BYTES * 1.25) {
-    const dataUrl = await blobToDataUrl(best);
-    return { dataUrl, width, height, bytesApprox: best.size };
+    return { blob: best, width, height };
   }
 
   throw new Error(
     "Image is still too heavy after compress. Use a clearer, smaller photo.",
   );
+}
+
+async function uploadToCloudinary(blob: Blob): Promise<string> {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null;
+  if (!token) {
+    throw new Error("Please sign in again before uploading images.");
+  }
+  const fd = new FormData();
+  const name = blob.type === "image/webp" ? "photo.webp" : "photo.jpg";
+  fd.append("file", blob, name);
+  const res = await fetch(`${API_URL}/uploads/image`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: fd,
+  });
+  const json = (await res.json().catch(() => null)) as {
+    success?: boolean;
+    message?: string;
+    data?: { url?: string };
+  } | null;
+  if (!res.ok || !json?.success || !json.data?.url) {
+    throw new Error(
+      json?.message ||
+        "Cloudinary upload failed. Set CLOUDINARY_* on the API and try again.",
+    );
+  }
+  return json.data.url;
+}
+
+/**
+ * Rejects leftover base64 data-URLs. Product records must store a URL or path.
+ */
+export function assertImageFieldSafe(image: string): void {
+  const value = (image || "").trim();
+  if (!value) return;
+  if (value.startsWith("data:")) {
+    throw new Error(
+      "Upload the photo instead of pasting a data URL. Images are hosted on Cloudinary.",
+    );
+  }
+  if (value.length > 2000) {
+    throw new Error("Image URL is too long.");
+  }
+}
+
+/**
+ * Resize + compress, then upload to Cloudinary. Returns the hosted URL.
+ */
+export async function prepareProductImage(file: File): Promise<PreparedImage> {
+  const { blob, width, height } = await compressToBlob(file);
+  const url = await uploadToCloudinary(blob);
+  return { url, width, height, bytesApprox: blob.size };
 }

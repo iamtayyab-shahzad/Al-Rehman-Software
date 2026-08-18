@@ -1,7 +1,7 @@
 import { pizzaCategoryIds } from "@/data/krunchies";
 
 const PIZZA_SIZE_RE =
-  /^(s|m|l|xl|small|medium|large|extra\s*large|x-?large)$/i;
+  /^(p|s|m|l|xl|personal|small|medium|large|family|extra\s*large|x-?large)$/i;
 
 const pizzaIdsLower = new Set(
   [...pizzaCategoryIds].map((id) => id.toLowerCase()),

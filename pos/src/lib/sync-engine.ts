@@ -1050,7 +1050,7 @@ export async function runSync(reason: string = "manual"): Promise<void> {
               await replaceInventory(inventory);
             }
           }
-          const { setDiscountRulesCache } = await import("@/lib/weekend-promo");
+          const { setDiscountRulesCache } = await import("@/lib/discount-rules");
           const { cacheSet: cacheSetLocal } = await import("@/lib/offline-db");
           if (Array.isArray(discountRules)) {
             setDiscountRulesCache(discountRules);
@@ -1119,7 +1119,7 @@ export function startSyncEngine() {
     await refreshPendingCount();
     try {
       const { cacheGet } = await import("@/lib/offline-db");
-      const { setDiscountRulesCache } = await import("@/lib/weekend-promo");
+      const { setDiscountRulesCache } = await import("@/lib/discount-rules");
       const cached = await cacheGet<Parameters<typeof setDiscountRulesCache>[0]>(
         "discount_rules",
       );

@@ -1,7 +1,7 @@
 {
-  "name": "Krunchies POS",
-  "short_name": "KrunchiesPOS",
-  "description": "Offline-capable Point of Sale for Krunchies Pizza",
+  "name": "Al-rehman POS",
+  "short_name": "AlrehmanPOS",
+  "description": "Offline-capable Point of Sale for Al-rehman Fast Food",
   "start_url": "/orders/new",
   "scope": "/",
   "display": "standalone",
@@ -12,36 +12,22 @@
   "categories": ["business", "food"],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/logo.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "New Order",
       "short_name": "Order",
-      "url": "/orders/new",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/orders/new"
     },
     {
       "name": "Pending Orders",
       "short_name": "Pending",
-      "url": "/orders/pending",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/orders/pending"
     }
   ]
 }

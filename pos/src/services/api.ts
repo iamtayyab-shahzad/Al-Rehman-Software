@@ -30,7 +30,7 @@ import {
   POS_SYNC_COMPLETE_EVENT,
 } from "@/lib/sync-engine";
 import { calcCodFee, calcGrandTotal, recomputeOrderMoney } from "@/lib/utils";
-import { weekendDiscount } from "@/lib/weekend-promo";
+import { weekendDiscount } from "@/lib/discount-rules";
 import {
   karachiYmd,
   localMonthlySales,

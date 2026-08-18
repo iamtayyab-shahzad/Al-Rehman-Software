@@ -20,6 +20,7 @@ import {
   shouldWriteCacheData,
   type HealReport,
 } from "@/lib/storage-health";
+import { shop } from "@/lib/shop";
 
 export type CachedSession = {
   username: string;
@@ -76,7 +77,7 @@ interface PosDB extends DBSchema {
   };
 }
 
-const DB_NAME = "krunchies-pos";
+const DB_NAME = shop.posDbName;
 const DB_VERSION = 3;
 
 let dbPromise: Promise<IDBPDatabase<PosDB>> | null = null;

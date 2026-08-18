@@ -20,7 +20,6 @@ import {
 } from "@/lib/offline-db";
 import {
   claimPosSingleInstance,
-  closeDuplicatePosWindow,
   type PosInstanceRole,
 } from "@/lib/pos-single-instance";
 
@@ -56,21 +55,6 @@ async function hydrateOrdersFromIdb(client: QueryClient) {
   }
 }
 
-function DuplicatePosScreen() {
-  useEffect(() => {
-    closeDuplicatePosWindow();
-  }, []);
-  return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-black px-6 text-center text-white">
-      <p className="text-2xl font-black text-orange-400">POS already open</p>
-      <p className="mt-3 max-w-md text-base text-zinc-300">
-        Use the other Krunchies POS window. This extra window closes so the
-        same orders are not synced twice.
-      </p>
-    </div>
-  );
-}
-
 export function Providers({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<PosInstanceRole | "checking">("checking");
   const [client] = useState(
@@ -98,8 +82,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (role !== "leader") return;
-    const stop = startSyncEngine();
+    if (role === "checking") return;
+    // Two tills on one PC: only one window runs the sync engine against
+    // shared IndexedDB. Both windows can still take orders.
+    const stop = role === "leader" ? startSyncEngine() : undefined;
     // Local cashier mutations: paint from IndexedDB immediately — never wait on API.
     const onOrdersChanged = () => {
       void hydrateOrdersFromIdb(client);
@@ -139,10 +125,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         Starting POS…
       </div>
     );
-  }
-
-  if (role === "duplicate") {
-    return <DuplicatePosScreen />;
   }
 
   return (

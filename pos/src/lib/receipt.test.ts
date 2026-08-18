@@ -51,7 +51,7 @@ describe("receipt product names", () => {
       id: "settings",
       created_at: "",
       updated_at: "",
-      restaurant_name: "Krunchies Pizza",
+      restaurant_name: "Al-rehman Fast Food",
       currency: "Rs",
     } as never);
     expect(html).toContain("Tikka Roll");
@@ -239,12 +239,8 @@ describe("kitchen ticket layout", () => {
     expect(kitchen).toContain("1 Regular Drink");
     const customer = buildCustomerReceiptHtml(order, null);
     expect(customer).toContain("1 Zinger Burger");
-    expect(customer).toContain("www.krunchies.pk");
-    expect(customer).toContain("Order online");
-    expect(customer).toContain("viewBox=\"0 0 33 33\"");
-    expect(customer).toContain('fill="#000"');
-    expect(customer).not.toContain('stroke="#000"');
-    expect(customer).toContain("width: 28mm");
+    expect(customer).not.toContain("www.krunchies.pk");
+    expect(customer).toContain("Al-rehman Fast Food");
     expect(customer).toContain("Staff notes:");
     expect(customer).not.toContain("font-weight: 800");
   });

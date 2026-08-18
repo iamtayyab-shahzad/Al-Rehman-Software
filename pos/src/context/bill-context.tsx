@@ -24,7 +24,7 @@ import {
   WALKIN_LOCATION_ID,
 } from "@/lib/utils";
 import { isDealProduct } from "@/lib/deal-flavors";
-import { weekendDiscount } from "@/lib/weekend-promo";
+import { weekendDiscount } from "@/lib/discount-rules";
 import { deleteDraft, getDraft, saveDraft } from "@/lib/offline-db";
 
 const ACTIVE_DRAFT_ID = "active-cart";

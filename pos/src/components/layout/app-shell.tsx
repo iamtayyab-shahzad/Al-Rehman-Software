@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Sidebar, TopBar } from "@/components/layout/shell";
 import { useMenuSearch } from "@/context/menu-search-context";
 import { TOKEN_KEY, isTokenExpired, isOfflineSessionValid } from "@/lib/utils";
+import { shop } from "@/lib/shop";
 import { isOnline } from "@/lib/network";
 import {
   sessionRepo,
@@ -113,7 +114,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar
-          restaurantName={settings?.restaurant_name || "Krunchies Pizza"}
+          restaurantName={settings?.restaurant_name || shop.name}
           search={isNewOrder ? search : undefined}
           onSearch={isNewOrder ? setSearch : undefined}
         />

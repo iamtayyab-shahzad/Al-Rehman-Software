@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { RegisterSW } from "@/components/pwa-register";
+import { shop } from "@/lib/shop";
 import "./globals.css";
 
 const geist = Geist({
@@ -11,23 +12,21 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Krunchies POS",
-  description: "Offline-capable Point of Sale for Krunchies Pizza",
-  applicationName: "Krunchies POS",
+  title: `${shop.shortName} POS`,
+  description: `Offline-capable Point of Sale for ${shop.name}`,
+  applicationName: `${shop.shortName} POS`,
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Krunchies POS",
+    title: `${shop.shortName} POS`,
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo.svg", sizes: "any" },
     ],
-    apple: [{ url: "/icons/icon-192.png", sizes: "192x192" }],
-    shortcut: "/favicon.ico",
+    apple: [{ url: "/logo.svg", sizes: "192x192" }],
+    shortcut: "/logo.svg",
   },
   other: {
     "mobile-web-app-capable": "yes",

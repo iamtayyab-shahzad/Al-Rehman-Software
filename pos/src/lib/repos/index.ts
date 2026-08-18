@@ -28,6 +28,7 @@ import {
   krunchiesCategories,
   krunchiesProducts,
 } from "@/data/krunchies";
+import { shop } from "@/lib/shop";
 import type {
   Category,
   Customer,
@@ -281,7 +282,7 @@ const emptySettings = (): Settings => ({
   id: "default",
   created_at: "",
   updated_at: "",
-  restaurant_name: "Krunchies Pizza",
+  restaurant_name: shop.name,
   phone: "",
   whatsapp: "",
   logo: "",
