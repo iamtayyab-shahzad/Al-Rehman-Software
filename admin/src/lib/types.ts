@@ -30,6 +30,7 @@ export type Product = {
   image: string;
   available: boolean;
   featured: boolean;
+  allowManualPrice?: boolean;
   basePrice: number;
   pizzaSizes?: PizzaSize[];
 };

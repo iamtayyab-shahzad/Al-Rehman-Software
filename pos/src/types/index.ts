@@ -32,6 +32,7 @@ export interface Product extends BaseEntity {
   image: string;
   featured: boolean;
   available: boolean;
+  allow_manual_price?: boolean;
   display_order: number;
   sizes?: ProductSize[];
 }
@@ -200,6 +201,8 @@ export interface BillLine {
   extras?: string;
   /** Flyer/combo deal — excluded from Fri & Sun 10% promo. */
   is_deal?: boolean;
+  /** Cashier-entered price for sweets / weight items. */
+  allow_manual_price?: boolean;
   was_price?: number;
 }
 

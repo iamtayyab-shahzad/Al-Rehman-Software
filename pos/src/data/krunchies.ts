@@ -58,6 +58,7 @@ export const krunchiesProducts: Product[] = catalog.products.map(
       image: product.image,
       featured: product.featured,
       available: true,
+      allow_manual_price: Boolean(product.allowManualPrice),
       display_order: index + 1,
       sizes: product.sizes.map((size, sizeIndex) => {
         const wasPrice =

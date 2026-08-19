@@ -27,6 +27,8 @@ var (
 
 const maxUploadBytes = 2 * 1024 * 1024
 
+func MaxUploadBytes() int { return maxUploadBytes }
+
 type uploadAPIResponse struct {
 	SecureURL string `json:"secure_url"`
 	Error     struct {

@@ -59,13 +59,14 @@ type menuFile struct {
 		DisplayOrder int    `json:"displayOrder"`
 	} `json:"categories"`
 	Products []struct {
-		ID          string `json:"id"`
-		Category    string `json:"category"`
-		Name        string `json:"name"`
-		Description string `json:"description"`
-		Image       string `json:"image"`
-		Featured    bool   `json:"featured"`
-		Sizes       []struct {
+		ID               string `json:"id"`
+		Category         string `json:"category"`
+		Name             string `json:"name"`
+		Description      string `json:"description"`
+		Image            string `json:"image"`
+		Featured         bool   `json:"featured"`
+		AllowManualPrice bool   `json:"allowManualPrice"`
+		Sizes            []struct {
 			Name     string `json:"name"`
 			Price    int    `json:"price"`
 			WasPrice int    `json:"wasPrice"`
@@ -138,14 +139,15 @@ func main() {
 		productID := uuid.MustParse(p.ID)
 		prodIDs = append(prodIDs, p.ID)
 		products = append(products, domain.Product{
-			BaseModel:    domain.BaseModel{ID: productID, CreatedAt: now, UpdatedAt: now},
-			CategoryID:   categoryID,
-			Name:         p.Name,
-			Description:  p.Description,
-			Image:        p.Image,
-			Featured:     p.Featured,
-			Available:    true,
-			DisplayOrder: index + 1,
+			BaseModel:        domain.BaseModel{ID: productID, CreatedAt: now, UpdatedAt: now},
+			CategoryID:       categoryID,
+			Name:             p.Name,
+			Description:      p.Description,
+			Image:            p.Image,
+			Featured:         p.Featured,
+			Available:        true,
+			AllowManualPrice: p.AllowManualPrice,
+			DisplayOrder:     index + 1,
 		})
 		for sizeIndex, s := range p.Sizes {
 			sid := sizeID(p.ID, sizeIndex)
@@ -216,7 +218,7 @@ func main() {
 		if err := upsert(tx, &categories, "name", "image", "display_order", "visible", "updated_at"); err != nil {
 			return fmt.Errorf("categories: %w", err)
 		}
-		if err := upsert(tx, &products, "category_id", "name", "description", "image", "featured", "available", "display_order", "updated_at"); err != nil {
+		if err := upsert(tx, &products, "category_id", "name", "description", "image", "featured", "available", "allow_manual_price", "display_order", "updated_at"); err != nil {
 			return fmt.Errorf("products: %w", err)
 		}
 		if err := upsert(tx, &sizes, "product_id", "size", "price", "was_price", "updated_at"); err != nil {
@@ -256,7 +258,7 @@ func main() {
 		SELECT COUNT(*) FROM products p
 		JOIN categories c ON c.id = p.category_id
 		WHERE c.id = ? OR lower(c.name) = 'cold drinks'
-	`, uuid.MustParse("10000000-0000-4000-8000-000000000013")).Scan(&coldCount)
+	`, uuid.MustParse("10000000-0000-4000-8000-000000000017")).Scan(&coldCount)
 	menuCold := 0
 	for _, p := range menu.Products {
 		if p.Category == "cold-drinks" {

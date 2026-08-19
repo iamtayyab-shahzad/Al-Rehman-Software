@@ -26,6 +26,7 @@ type BackendProduct = {
   image: string;
   featured: boolean;
   available: boolean;
+  allow_manual_price?: boolean;
   display_order: number;
 };
 
@@ -176,6 +177,7 @@ function mapProduct(p: BackendProduct, sizes: BackendProductSize[]): Product {
     image: p.image,
     available: p.available,
     featured: p.featured,
+    allowManualPrice: Boolean(p.allow_manual_price),
     basePrice,
     pizzaSizes,
   };
@@ -287,6 +289,7 @@ export const productsApi = {
         image: payload.image,
         featured: payload.featured,
         available: payload.available,
+        allow_manual_price: Boolean(payload.allowManualPrice),
       }),
     });
 
@@ -310,6 +313,7 @@ export const productsApi = {
       image: string;
       featured: boolean;
       available: boolean;
+      allowManualPrice?: boolean;
       pizzaSizes: PizzaSize[];
     },
   ) => {
@@ -322,6 +326,7 @@ export const productsApi = {
         image: payload.image,
         featured: payload.featured,
         available: payload.available,
+        allow_manual_price: Boolean(payload.allowManualPrice),
       }),
     });
 

@@ -193,7 +193,13 @@ func (s *OrderService) CreateOrder(
 			return nil, utils.NewAppError(http.StatusBadRequest, "product is unavailable: "+product.Name)
 		}
 
-		lineTotal := size.Price * item.Quantity
+		unitPrice, err := resolveLinePrice(orderType, product, size, item.Price)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+
+		lineTotal := unitPrice * item.Quantity
 		subtotal += lineTotal
 		if !isDealProduct(product) {
 			eligibleSubtotal += lineTotal
@@ -202,7 +208,7 @@ func (s *OrderService) CreateOrder(
 			ProductID:           item.ProductID,
 			ProductSizeID:       item.ProductSizeID,
 			Quantity:            item.Quantity,
-			Price:               size.Price,
+			Price:               unitPrice,
 			SpecialInstructions: strings.TrimSpace(item.SpecialInstructions),
 		})
 	}
@@ -404,7 +410,12 @@ func (s *OrderService) UpdateOrder(id uuid.UUID, input dto.UpdateOrderRequest) e
 				tx.Rollback()
 				return utils.NewAppError(http.StatusBadRequest, "product is unavailable: "+product.Name)
 			}
-			lineTotal := size.Price * item.Quantity
+			unitPrice, err := resolveLinePrice(current.OrderType, product, size, item.Price)
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+			lineTotal := unitPrice * item.Quantity
 			subtotal += lineTotal
 			if !isDealProduct(product) {
 				eligibleSubtotal += lineTotal
@@ -413,7 +424,7 @@ func (s *OrderService) UpdateOrder(id uuid.UUID, input dto.UpdateOrderRequest) e
 				ProductID:           item.ProductID,
 				ProductSizeID:       item.ProductSizeID,
 				Quantity:            item.Quantity,
-				Price:               size.Price,
+				Price:               unitPrice,
 				SpecialInstructions: strings.TrimSpace(item.SpecialInstructions),
 			})
 		}
@@ -796,6 +807,19 @@ func normalizeOrderType(orderType string) string {
 	default:
 		return "website"
 	}
+}
+
+func resolveLinePrice(
+	orderType string,
+	product domain.Product,
+	size domain.ProductSize,
+	clientPrice *int,
+) (int, error) {
+	staffOrder := orderType == "walkin" || orderType == "phone"
+	if staffOrder && product.AllowManualPrice && clientPrice != nil && *clientPrice > 0 {
+		return *clientPrice, nil
+	}
+	return size.Price, nil
 }
 
 func ParseOrderID(id string) (uuid.UUID, error) {

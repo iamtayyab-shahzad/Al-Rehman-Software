@@ -1,126 +1,149 @@
 {
   "restaurant": {
-    "name": "Al-rehman Fast Food",
-    "tagline": "Maza he Maza",
-    "phone": "03013095109",
+    "address": "",
     "alternatePhone": "",
-    "whatsapp": "923013095109",
-    "openingTime": "11:00 AM",
     "closingTime": "12:00 AM",
     "currency": "Rs",
-    "address": "",
     "deliveryNote": "Call now for delivery",
-    "thankYouNote": "THANK YOU FOR CHOOSING AL-REHMAN FAST FOOD!"
+    "name": "Al-rehman Fast Food",
+    "openingTime": "11:00 AM",
+    "phone": "03013095109",
+    "tagline": "Maza he Maza",
+    "thankYouNote": "THANK YOU FOR CHOOSING AL-REHMAN FAST FOOD!",
+    "whatsapp": "923013095109"
   },
   "promotions": [],
-  "notes": [
-    "Fast-food flyer items only. Sweets, samosas and cakes will be added as separate categories later.",
-    "Printed spellings kept where useful (Alfaredo, Peproni, Pratha, Sulet, Peti).",
-    "Wings-section Loaded Fries is listed as Loaded Fries Special (Rs 450) so it is not mixed with Fries Loaded Fries (Rs 349)."
-  ],
   "locations": [
     {
+      "deliveryCharge": 0,
       "id": "50000000-0000-4000-8000-000000000000",
-      "name": "In Store (Walk-in)",
-      "deliveryCharge": 0
+      "name": "In Store (Walk-in)"
     },
     {
+      "deliveryCharge": 0,
       "id": "50000000-0000-4000-8000-000000000001",
-      "name": "Local Delivery",
-      "deliveryCharge": 0
+      "name": "Local Delivery"
     }
   ],
   "categories": [
     {
+      "displayOrder": 1,
       "id": "10000000-0000-4000-8000-000000000001",
+      "image": "/products/placeholder.svg",
       "name": "Deals",
-      "slug": "deals",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 1
+      "slug": "deals"
     },
     {
+      "displayOrder": 2,
       "id": "10000000-0000-4000-8000-000000000002",
+      "image": "/products/placeholder.svg",
       "name": "Standard Pizza",
-      "slug": "standard-pizza",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 2
+      "slug": "standard-pizza"
     },
     {
+      "displayOrder": 3,
       "id": "10000000-0000-4000-8000-000000000003",
+      "image": "/products/placeholder.svg",
       "name": "Premium Pizza",
-      "slug": "premium-pizza",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 3
+      "slug": "premium-pizza"
     },
     {
+      "displayOrder": 4,
       "id": "10000000-0000-4000-8000-000000000004",
+      "image": "/products/placeholder.svg",
       "name": "Burgers",
-      "slug": "burgers",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 4
+      "slug": "burgers"
     },
     {
+      "displayOrder": 5,
       "id": "10000000-0000-4000-8000-000000000005",
+      "image": "/products/placeholder.svg",
       "name": "Fries",
-      "slug": "fries",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 5
+      "slug": "fries"
     },
     {
+      "displayOrder": 6,
       "id": "10000000-0000-4000-8000-000000000006",
+      "image": "/products/placeholder.svg",
       "name": "Pasta",
-      "slug": "pasta",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 6
+      "slug": "pasta"
     },
     {
+      "displayOrder": 7,
       "id": "10000000-0000-4000-8000-000000000007",
-      "name": "Wings & Snacks",
-      "slug": "wings-snacks",
       "image": "/products/placeholder.svg",
-      "displayOrder": 7
+      "name": "Wings \u0026 Snacks",
+      "slug": "wings-snacks"
     },
     {
+      "displayOrder": 8,
       "id": "10000000-0000-4000-8000-000000000008",
-      "name": "Rolls & Shawarma",
-      "slug": "rolls-shawarma",
       "image": "/products/placeholder.svg",
-      "displayOrder": 8
+      "name": "Rolls \u0026 Shawarma",
+      "slug": "rolls-shawarma"
     },
     {
+      "displayOrder": 9,
       "id": "10000000-0000-4000-8000-000000000009",
+      "image": "/products/placeholder.svg",
       "name": "Broast",
-      "slug": "broast",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 9
+      "slug": "broast"
     },
     {
+      "displayOrder": 10,
       "id": "10000000-0000-4000-8000-000000000010",
+      "image": "/products/placeholder.svg",
       "name": "Sandwiches",
-      "slug": "sandwiches",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 10
+      "slug": "sandwiches"
     },
     {
+      "displayOrder": 11,
       "id": "10000000-0000-4000-8000-000000000011",
+      "image": "/products/placeholder.svg",
       "name": "Chinese",
-      "slug": "chinese",
-      "image": "/products/placeholder.svg",
-      "displayOrder": 11
+      "slug": "chinese"
     },
     {
+      "displayOrder": 12,
       "id": "10000000-0000-4000-8000-000000000012",
-      "name": "Chowmein",
-      "slug": "chowmein",
       "image": "/products/placeholder.svg",
-      "displayOrder": 12
+      "name": "Chowmein",
+      "slug": "chowmein"
     },
     {
+      "displayOrder": 13,
       "id": "10000000-0000-4000-8000-000000000013",
-      "name": "Nachos",
-      "slug": "nachos",
       "image": "/products/placeholder.svg",
-      "displayOrder": 13
+      "name": "Nachos",
+      "slug": "nachos"
+    },
+    {
+      "displayOrder": 14,
+      "id": "10000000-0000-4000-8000-000000000014",
+      "image": "/products/placeholder.svg",
+      "name": "Snacks \u0026 Savouries",
+      "slug": "snacks-savouries"
+    },
+    {
+      "displayOrder": 15,
+      "id": "10000000-0000-4000-8000-000000000015",
+      "image": "/products/placeholder.svg",
+      "name": "Sweets",
+      "slug": "sweets"
+    },
+    {
+      "displayOrder": 16,
+      "id": "10000000-0000-4000-8000-000000000016",
+      "image": "/products/placeholder.svg",
+      "name": "Biscuits \u0026 Bakery",
+      "slug": "biscuits-bakery"
+    },
+    {
+      "displayOrder": 17,
+      "id": "10000000-0000-4000-8000-000000000017",
+      "image": "/products/placeholder.svg",
+      "name": "Cold Drinks",
+      "slug": "cold-drinks"
     }
   ],
   "products": [
@@ -129,8 +152,9 @@
       "category": "deals",
       "name": "One Man Show",
       "description": "Fried drum stick + regular fries + regular drink.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125105/alrehman/products/zbr9hnrlwfcqvdmvcgt2.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -143,8 +167,9 @@
       "category": "deals",
       "name": "One Person Deal",
       "description": "1 zinger burger + regular fries + 1 regular drink.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125107/alrehman/products/ntomjplgixezpqb7myex.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -157,8 +182,9 @@
       "category": "deals",
       "name": "Midnight Deal",
       "description": "1 large pizza + 1 pasta + 1 litre drink.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125108/alrehman/products/dlio0zdlyzpodj4tcrle.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -171,8 +197,9 @@
       "category": "deals",
       "name": "Small Deal",
       "description": "3 small pizzas + 1 litre drink.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125109/alrehman/products/sauifoumdjjtjdrjqddm.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -185,8 +212,9 @@
       "category": "deals",
       "name": "Family Deal",
       "description": "1 extra large pizza + 1 medium pizza + 1 litre drink.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125110/alrehman/products/mymvrj1qbjtoimvgbfgv.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -199,8 +227,9 @@
       "category": "standard-pizza",
       "name": "Fajita Pizza",
       "description": "Chicken fajita pizza.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125112/alrehman/products/ildawve8e3ydpgcnarrs.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Personal",
@@ -229,8 +258,9 @@
       "category": "standard-pizza",
       "name": "Chicken Tikka",
       "description": "Chicken tikka pizza.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125113/alrehman/products/q2onsiad3prbkmaokjff.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Personal",
@@ -259,8 +289,9 @@
       "category": "standard-pizza",
       "name": "Smokey BBQ",
       "description": "Smokey BBQ chicken pizza.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125115/alrehman/products/hmpgcrhi3irjmyy8sgpd.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Personal",
@@ -289,8 +320,9 @@
       "category": "standard-pizza",
       "name": "Special",
       "description": "House special pizza.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125116/alrehman/products/kohipczyibryjjeuusk8.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Personal",
@@ -319,8 +351,9 @@
       "category": "premium-pizza",
       "name": "Crown Crust",
       "description": "Special sauce pizza with crown kebab, onion, capsicum, tikka chicken, mughlai chicken and cheese.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125118/alrehman/products/anfldbztb81tozigsyly.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Medium",
@@ -341,8 +374,9 @@
       "category": "premium-pizza",
       "name": "Kebab Crust",
       "description": "Stuffed crust pizza with kebab, onion, tomato, jalapeno, mughlai chicken, black olive, mushroom, cheese and signature sauce.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125119/alrehman/products/jb5dkhmjksqbz3cp3ae3.avif",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Medium",
@@ -363,8 +397,9 @@
       "category": "premium-pizza",
       "name": "Cheese Lover",
       "description": "Special sauce pizza loaded with extra cheese, chicken and veggies.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125120/alrehman/products/qqxgbio8v0nyvc1l9yat.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Medium",
@@ -385,8 +420,9 @@
       "category": "premium-pizza",
       "name": "Malai Boti",
       "description": "Special sauce, malai chicken, onion, capsicum, cheese and jalapeno with signature kababish sauce.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125121/alrehman/products/hixkq4rj3fpit3mu3opi.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Medium",
@@ -407,8 +443,9 @@
       "category": "premium-pizza",
       "name": "Peproni",
       "description": "Pizza with mughlai sauce, peproni, cheese and capsicum.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125122/alrehman/products/rpunvh8dgtadjvvpzsdv.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Medium",
@@ -429,8 +466,9 @@
       "category": "burgers",
       "name": "Zinger Burger",
       "description": "Crispy zinger burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125123/alrehman/products/e4azgdl4vgvxl225fr2f.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -443,8 +481,9 @@
       "category": "burgers",
       "name": "Peti Burger",
       "description": "Peti burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125124/alrehman/products/hnclqp6ptrshcge0odsa.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -457,8 +496,9 @@
       "category": "burgers",
       "name": "Chapli Burger",
       "description": "Chapli burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125125/alrehman/products/ni0khiuqgjbffmwcoun4.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -471,8 +511,9 @@
       "category": "burgers",
       "name": "Sulet Burger",
       "description": "Sulet burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136621/alrehman/products/dfvoozbcuaxzyrltcb9m.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -485,8 +526,9 @@
       "category": "burgers",
       "name": "Beef Burger",
       "description": "Beef burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136622/alrehman/products/vgaxsiki4y1pg4abojmw.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -499,8 +541,9 @@
       "category": "burgers",
       "name": "RH Special Burger",
       "description": "Al-rehman special burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136625/alrehman/products/seoxhxfzxnxypnsj4rwz.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -513,8 +556,9 @@
       "category": "burgers",
       "name": "Tikka Burger",
       "description": "Chicken tikka burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125125/alrehman/products/o2gvsgf1oerjrasm332m.webp",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -527,8 +571,9 @@
       "category": "burgers",
       "name": "Pizza Burger",
       "description": "Pizza burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125126/alrehman/products/fpg6xjwqyurm2jflbuup.webp",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -541,8 +586,9 @@
       "category": "burgers",
       "name": "Mighty Burger",
       "description": "Mighty burger.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125127/alrehman/products/pwv1xcp1s7ko7lf0d2wz.webp",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -555,8 +601,9 @@
       "category": "fries",
       "name": "Regular Fries",
       "description": "Regular fries.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125128/alrehman/products/urj3lovjek56niyllzr1.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -569,8 +616,9 @@
       "category": "fries",
       "name": "Loaded Fries",
       "description": "Loaded fries.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125128/alrehman/products/o2sxhe5mhowhvtl1z1a5.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -583,8 +631,9 @@
       "category": "fries",
       "name": "Pizza Fries",
       "description": "Pizza fries.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125129/alrehman/products/re9ypcvum0fgqxrbfmtl.webp",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -597,8 +646,9 @@
       "category": "fries",
       "name": "Crunchy Loaded Fries",
       "description": "Crunchy loaded fries.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125130/alrehman/products/hchjusdfts0imigzjeuk.webp",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -611,8 +661,9 @@
       "category": "fries",
       "name": "Special Pizza Fries",
       "description": "Special pizza fries.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125131/alrehman/products/ytmfwu4x2psddwaqwium.webp",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -625,8 +676,9 @@
       "category": "pasta",
       "name": "Alfaredo Pasta",
       "description": "Alfredo-style pasta.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125131/alrehman/products/fprdbxptieltbgms4e1e.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -639,8 +691,9 @@
       "category": "pasta",
       "name": "Special Alfaredo Pasta",
       "description": "Special alfredo pasta.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125132/alrehman/products/dmyz36b2plkotngffwni.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -653,8 +706,9 @@
       "category": "pasta",
       "name": "Oven Baked Pasta",
       "description": "Oven baked pasta.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125134/alrehman/products/wz6kpxtv13mvqq74q8pw.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -667,8 +721,9 @@
       "category": "pasta",
       "name": "Special Oven Baked Pasta",
       "description": "Special oven baked pasta.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125134/alrehman/products/inb1c5ynughrqcsyydtu.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -681,8 +736,9 @@
       "category": "wings-snacks",
       "name": "Wings",
       "description": "Chicken wings.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125135/alrehman/products/g3vbu9vskl12ezqkqzkw.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -695,8 +751,9 @@
       "category": "wings-snacks",
       "name": "Hot Wings",
       "description": "Hot chicken wings.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125136/alrehman/products/a4pujcoks1lujpkbexpd.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -709,8 +766,9 @@
       "category": "wings-snacks",
       "name": "Oven Baked",
       "description": "Oven baked wings.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136627/alrehman/products/imjnpzybjj72h3cho1ei.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -723,8 +781,9 @@
       "category": "wings-snacks",
       "name": "Hot Short",
       "description": "Hot short.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125137/alrehman/products/qmbpbio4w1ok3crp5l1y.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -737,8 +796,9 @@
       "category": "wings-snacks",
       "name": "Nuggets",
       "description": "Chicken nuggets.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125138/alrehman/products/sypmzikwqe0rlbm7uft0.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -751,8 +811,9 @@
       "category": "wings-snacks",
       "name": "Loaded Fries Special",
       "description": "Loaded fries from the wings section.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125139/alrehman/products/vwgldgb26c4bpdj9ysek.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -765,8 +826,9 @@
       "category": "rolls-shawarma",
       "name": "Arabic Roll",
       "description": "Arabic roll.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125139/alrehman/products/udcudy4le3klaszumstg.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -779,8 +841,9 @@
       "category": "rolls-shawarma",
       "name": "Zinger Shawarma",
       "description": "Zinger shawarma.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125140/alrehman/products/vn9rotpbd0crfd0177xw.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -793,8 +856,9 @@
       "category": "rolls-shawarma",
       "name": "Tikka Shawarma",
       "description": "Tikka shawarma.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125142/alrehman/products/oyckwteqxith2mcibsff.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -807,8 +871,9 @@
       "category": "rolls-shawarma",
       "name": "Zinger Pratha Roll",
       "description": "Zinger paratha roll.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136629/alrehman/products/hyn9xsj8jojks1loxnif.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -821,8 +886,9 @@
       "category": "rolls-shawarma",
       "name": "Chicken Pratha Roll",
       "description": "Chicken paratha roll.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125143/alrehman/products/bshtplixkyma9zvmujoi.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -835,8 +901,9 @@
       "category": "rolls-shawarma",
       "name": "Chicken Shawarma",
       "description": "Chicken shawarma.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125144/alrehman/products/batk6l4hgzb7botmh638.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -849,8 +916,9 @@
       "category": "broast",
       "name": "Full Broast",
       "description": "Full broast chicken.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125145/alrehman/products/clxdqvvamuakbkgmpqew.jpg",
       "featured": true,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -863,8 +931,9 @@
       "category": "broast",
       "name": "All Baked Chicken Broast",
       "description": "All baked chicken broast.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136631/alrehman/products/hv2gxyohvrpgcdgfsxjb.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -877,8 +946,9 @@
       "category": "sandwiches",
       "name": "Grill Sandwich",
       "description": "Grill sandwich.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125146/alrehman/products/jaxl4ktetp8xwjbfrlkb.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -891,8 +961,9 @@
       "category": "sandwiches",
       "name": "Club Sandwich",
       "description": "Club sandwich.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125148/alrehman/products/l8ufgbyn4cyajqbf0jlk.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -905,8 +976,9 @@
       "category": "sandwiches",
       "name": "Panini Sandwich",
       "description": "Panini sandwich.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125148/alrehman/products/dpmtvtlt7kwqqn6hrwah.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -919,8 +991,9 @@
       "category": "chinese",
       "name": "Chicken Manchurian with Rice",
       "description": "Chicken manchurian served with rice.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136634/alrehman/products/wilu8p2uyacuqkpe86zq.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -933,8 +1006,9 @@
       "category": "chinese",
       "name": "Chicken Chilli Dry with Rice",
       "description": "Chicken chilli dry served with rice.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136636/alrehman/products/gdkx8gtcxkbuve6bbixb.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -947,8 +1021,9 @@
       "category": "chowmein",
       "name": "Special Chicken Chowmein",
       "description": "Special chicken chowmein.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136638/alrehman/products/cgsu1rxodx6f2a2wqri9.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
@@ -961,12 +1036,643 @@
       "category": "nachos",
       "name": "Crispy Loaded Nachos",
       "description": "Crispy loaded nachos.",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136642/alrehman/products/vgiwy0lyawk12rfekdog.jpg",
       "featured": false,
+      "allowManualPrice": false,
       "sizes": [
         {
           "name": "Regular",
           "price": 599
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000054",
+      "category": "snacks-savouries",
+      "name": "Samosa",
+      "description": "Crispy samosa.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136644/alrehman/products/dhq3sww1ucmca4iqfwnd.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Piece",
+          "price": 50
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000055",
+      "category": "snacks-savouries",
+      "name": "Pakorey",
+      "description": "Fresh pakorey.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136646/alrehman/products/huccthl1nct3swbyzlrm.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 800
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000056",
+      "category": "snacks-savouries",
+      "name": "Chips",
+      "description": "Crispy chips.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136648/alrehman/products/cm4jwojuvrxhtphjwdgr.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 800
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000057",
+      "category": "snacks-savouries",
+      "name": "Shorma",
+      "description": "Shorma roll.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136650/alrehman/products/vbjuco8jfo9lceclimeq.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 150
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000058",
+      "category": "snacks-savouries",
+      "name": "Shorma Special",
+      "description": "Special shorma roll.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136652/alrehman/products/ru4finucm7rwlrfbmetf.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000059",
+      "category": "snacks-savouries",
+      "name": "Shami Burger",
+      "description": "Shami burger.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136654/alrehman/products/my3zywuwtii8xo7lcetl.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 150
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000060",
+      "category": "snacks-savouries",
+      "name": "Chicken Burger",
+      "description": "Chicken burger.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136655/alrehman/products/yn2flfrjqqmzvyasxp4d.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000061",
+      "category": "sweets",
+      "name": "Mix Mithai",
+      "description": "Assorted mix mithai.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136657/alrehman/products/rjizkgi3tugum1pjbkxj.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 700
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000062",
+      "category": "sweets",
+      "name": "Special Mithai",
+      "description": "Special mithai.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136659/alrehman/products/ollvotohw5op8dzb4zfi.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 800
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000063",
+      "category": "sweets",
+      "name": "Sada Bari",
+      "description": "Sada bari.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136661/alrehman/products/uzyiqdq8mfk7g3wgcu66.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000064",
+      "category": "sweets",
+      "name": "Kalakand Bari",
+      "description": "Kalakand bari.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136662/alrehman/products/ajh7qf5fich1f86r5glv.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 1400
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000065",
+      "category": "sweets",
+      "name": "Lado",
+      "description": "Lado.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136664/alrehman/products/drnc467xojhtusad0uke.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 500
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000066",
+      "category": "sweets",
+      "name": "Jalebi",
+      "description": "Fresh jalebi.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136666/alrehman/products/pjwedinlrav0miwtvv7l.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 500
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000067",
+      "category": "sweets",
+      "name": "Namak Para",
+      "description": "Namak para.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136667/alrehman/products/bmmnir6q4bfijdatytmz.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 600
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000068",
+      "category": "biscuits-bakery",
+      "name": "Sada Biscuits",
+      "description": "Plain biscuits.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136669/alrehman/products/wfthhifklhipaxjlcqkk.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 700
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000069",
+      "category": "biscuits-bakery",
+      "name": "Special Biscuit",
+      "description": "Special biscuits.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136670/alrehman/products/ush1tczhoazgen1yi34u.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 800
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000070",
+      "category": "biscuits-bakery",
+      "name": "Kak Rus",
+      "description": "Kak rus.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136672/alrehman/products/w7qfqp4xiu1vi07wzsk7.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 800
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000071",
+      "category": "biscuits-bakery",
+      "name": "Small Bread",
+      "description": "Small bread loaf.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136674/alrehman/products/kbpylh5h9r8ejedxpwaf.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 120
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000072",
+      "category": "biscuits-bakery",
+      "name": "Large Bread",
+      "description": "Large bread loaf.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136675/alrehman/products/lm524nckre1pxmmzn6fn.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 220
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000073",
+      "category": "biscuits-bakery",
+      "name": "Double Roti",
+      "description": "Double roti pack.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136677/alrehman/products/u4ayshepdsaervpu3rfz.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 100
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000074",
+      "category": "biscuits-bakery",
+      "name": "Large Double Roti",
+      "description": "Large double roti pack.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136678/alrehman/products/tgxjgcadvi7skcknwihd.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 1450
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000075",
+      "category": "biscuits-bakery",
+      "name": "Ras Packet",
+      "description": "Ras packet.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136680/alrehman/products/l5z9bjmqapgazifwp9oj.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 440
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000076",
+      "category": "biscuits-bakery",
+      "name": "Kholi Rus",
+      "description": "Kholi rus.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136682/alrehman/products/sw823oytbmqol6jraqh4.jpg",
+      "featured": false,
+      "allowManualPrice": true,
+      "sizes": [
+        {
+          "name": "Per kg",
+          "price": 440
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000077",
+      "category": "cold-drinks",
+      "name": "2.5L Drink",
+      "description": "Soft drink 2.5 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125149/alrehman/products/hzgvio8qyykl4ohomrdt.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "2.5L",
+          "price": 250
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000078",
+      "category": "cold-drinks",
+      "name": "1.5L Drink",
+      "description": "Soft drink 1.5 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125150/alrehman/products/ptfutmzsidsrtp4yvu0n.webp",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "1.5L",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000079",
+      "category": "cold-drinks",
+      "name": "1L Drink",
+      "description": "Soft drink 1 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125151/alrehman/products/inewspravswl1qky8qcv.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "1L",
+          "price": 160
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000080",
+      "category": "cold-drinks",
+      "name": "Half Litre Drink",
+      "description": "Soft drink half litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125152/alrehman/products/hxrinlqhofrwn2kzyt2r.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Half L",
+          "price": 120
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000081",
+      "category": "cold-drinks",
+      "name": "350ml Drink",
+      "description": "Soft drink 350ml.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125152/alrehman/products/eocufeb964rhsis5yidm.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "350ml",
+          "price": 100
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000082",
+      "category": "cold-drinks",
+      "name": "Sting",
+      "description": "Sting energy drink.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125154/alrehman/products/xryavzzmvdeddmcuq8on.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 140
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000083",
+      "category": "cold-drinks",
+      "name": "350ml Sting",
+      "description": "Sting 350ml.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125155/alrehman/products/zp9u8n5ani0xytfo99j0.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "350ml",
+          "price": 100
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000084",
+      "category": "cold-drinks",
+      "name": "250ml Water",
+      "description": "Regular mineral water 250ml.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125158/alrehman/products/nltqtj4cjd6nmwstjdbg.avif",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "250ml",
+          "price": 60
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000085",
+      "category": "cold-drinks",
+      "name": "1.5L Water",
+      "description": "Mineral water 1.5 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125159/alrehman/products/afiag5acoqxwchja6exa.avif",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "1.5L",
+          "price": 120
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000086",
+      "category": "cold-drinks",
+      "name": "Half Litre Water",
+      "description": "Mineral water half litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125160/alrehman/products/mm54gp6a1hfwmki2phnm.avif",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Half L",
+          "price": 60
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000087",
+      "category": "cold-drinks",
+      "name": "Nestle 1L",
+      "description": "Nestle 1 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136683/alrehman/products/r41eqcyg9rphuwejpcra.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "1L",
+          "price": 400
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000088",
+      "category": "cold-drinks",
+      "name": "Popular Juice",
+      "description": "Popular juice.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136684/alrehman/products/qbicranfpduez49nnv6w.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 250
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000089",
+      "category": "cold-drinks",
+      "name": "1L Popular Juice",
+      "description": "Popular juice 1 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136685/alrehman/products/qc0y4sjmxok1twbnriyi.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "1L",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000090",
+      "category": "cold-drinks",
+      "name": "Half Litre Popular Juice",
+      "description": "Popular juice half litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136687/alrehman/products/nufhxy6oufkhkztesgbo.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Half L",
+          "price": 120
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000091",
+      "category": "cold-drinks",
+      "name": "Nestle 2.5L",
+      "description": "Nestle 2.5 litre.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136688/alrehman/products/t2wivkfyixtqraaum3u6.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "2.5L",
+          "price": 400
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000092",
+      "category": "cold-drinks",
+      "name": "Nestle 250ml",
+      "description": "Nestle 250ml.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136689/alrehman/products/kresb7mfnyfadpiy1jut.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "250ml",
+          "price": 90
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000093",
+      "category": "cold-drinks",
+      "name": "Nastfrie",
+      "description": "Nastfrie drink.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136690/alrehman/products/affzxdje5zqx8u7hmulg.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 70
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000094",
+      "category": "cold-drinks",
+      "name": "Shazan Juice",
+      "description": "Shazan juice.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787136691/alrehman/products/mjgbxxkfhfyipwdmgr5d.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 50
+        }
+      ]
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000095",
+      "category": "cold-drinks",
+      "name": "Mint Margarita",
+      "description": "Mint margarita.",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787125161/alrehman/products/bavahg9vufl1owdah8xp.jpg",
+      "featured": false,
+      "allowManualPrice": false,
+      "sizes": [
+        {
+          "name": "Regular",
+          "price": 200
         }
       ]
     }

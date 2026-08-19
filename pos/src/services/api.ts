@@ -690,10 +690,11 @@ export const ordersApi = {
       ...input,
       client_order_id: clientOrderId,
       items: input.items.map(
-        ({ product_id, product_size_id, quantity, special_instructions }) => ({
+        ({ product_id, product_size_id, quantity, price, special_instructions }) => ({
           product_id,
           product_size_id,
           quantity,
+          ...(typeof price === "number" && price > 0 ? { price } : {}),
           special_instructions,
         }),
       ),

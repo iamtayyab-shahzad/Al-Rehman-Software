@@ -81,8 +81,8 @@ export const products: Product[] = catalog.products.map((product, index) => {
     image: product.image,
     featured: product.featured,
     available: true,
+    allow_manual_price: Boolean(product.allowManualPrice),
     display_order: index + 1,
-    popular: product.featured,
     sizes: product.sizes.map((size, sizeIndex) => {
       const wasPrice =
         "wasPrice" in size && typeof size.wasPrice === "number"

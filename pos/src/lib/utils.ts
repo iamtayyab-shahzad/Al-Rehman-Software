@@ -156,11 +156,16 @@ export function makeLineKey(
   productId: string,
   sizeId: string,
   instructions?: string,
+  price?: number,
 ) {
   const note = (instructions || "").trim();
-  return note
+  const base = note
     ? `${productId}__${sizeId}__${note}`
     : `${productId}__${sizeId}`;
+  if (typeof price === "number" && price > 0) {
+    return `${base}__p${price}`;
+  }
+  return base;
 }
 
 export const PAYMENT_METHODS: {

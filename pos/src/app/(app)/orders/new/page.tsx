@@ -67,6 +67,12 @@ const DrinkFlavorDialog = dynamic(
   { ssr: false },
 );
 
+const ManualPriceDialog = dynamic(
+  () =>
+    import("@/components/manual-price-dialog").then((m) => m.ManualPriceDialog),
+  { ssr: false },
+);
+
 export default function NewOrderPage() {
   const qc = useQueryClient();
   const bill = useBill();
@@ -75,6 +81,9 @@ export default function NewOrderPage() {
   const [busy, setBusy] = useState(false);
   const [dealProduct, setDealProduct] = useState<Product | null>(null);
   const [drinkProduct, setDrinkProduct] = useState<Product | null>(null);
+  const [manualPriceProduct, setManualPriceProduct] = useState<Product | null>(
+    null,
+  );
   const isWalkin = bill.orderType === "walkin";
   const paymentOptions = paymentsForOrderType(bill.orderType);
 
@@ -174,6 +183,10 @@ export default function NewOrderPage() {
         setDrinkProduct(product);
         return;
       }
+      if (product.allow_manual_price) {
+        setManualPriceProduct(product);
+        return;
+      }
       bill.addProduct(product, chosen);
       if (isPizzaProduct(product) && sizes.length > 1) {
         toast.message(`${product.name} added (${chosen.size})`);
@@ -181,6 +194,15 @@ export default function NewOrderPage() {
     },
     [bill.addProduct], // addProduct is stable from BillProvider
   );
+
+  const onManualPriceConfirm = (
+    product: Product,
+    size: ProductSize,
+    price: number,
+  ) => {
+    bill.addProduct(product, size, { price });
+    toast.success(`${product.name} added · ${formatPrice(price, currency)}`);
+  };
 
   const onDealConfirm = (
     product: Product,
@@ -752,10 +774,38 @@ export default function NewOrderPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="font-bold text-white">{item.product_name}</p>
-                      <p className="text-sm text-orange-400">
-                        {formatPrice(item.price, currency)}
-                        {isPizzaSizeLabel(item.size) ? ` · ${item.size}` : ""}
-                      </p>
+                      {item.allow_manual_price ? (
+                        <div className="mt-1 flex items-center gap-2">
+                          <Label className="text-xs text-zinc-400">Price</Label>
+                          <Input
+                            className="h-8 w-24 text-sm"
+                            inputMode="numeric"
+                            value={String(item.price)}
+                            onChange={(e) => {
+                              const next = Number(
+                                e.target.value.replace(/[^\d]/g, ""),
+                              );
+                              if (Number.isFinite(next) && next > 0) {
+                                bill.setLinePrice(item.key, next);
+                              }
+                            }}
+                          />
+                          {isPizzaSizeLabel(item.size) ? (
+                            <span className="text-xs text-zinc-500">
+                              · {item.size}
+                            </span>
+                          ) : item.size && item.size !== "Regular" ? (
+                            <span className="text-xs text-zinc-500">
+                              · {item.size}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-orange-400">
+                          {formatPrice(item.price, currency)}
+                          {isPizzaSizeLabel(item.size) ? ` · ${item.size}` : ""}
+                        </p>
+                      )}
                     </div>
                     <button
                       type="button"
@@ -940,6 +990,14 @@ export default function NewOrderPage() {
           if (!open) setDrinkProduct(null);
         }}
         onConfirm={onDrinkConfirm}
+      />
+      <ManualPriceDialog
+        open={Boolean(manualPriceProduct)}
+        product={manualPriceProduct}
+        onOpenChange={(open) => {
+          if (!open) setManualPriceProduct(null);
+        }}
+        onConfirm={onManualPriceConfirm}
       />
     </div>
   );

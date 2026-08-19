@@ -56,12 +56,13 @@ interface BillContextValue extends BillState {
   addProduct: (
     product: Product,
     size: ProductSize,
-    opts?: { special_instructions?: string },
+    opts?: { special_instructions?: string; price?: number },
   ) => void;
   changeSize: (key: string, size: ProductSize) => void;
   increase: (key: string) => void;
   decrease: (key: string) => void;
   remove: (key: string) => void;
+  setLinePrice: (key: string, price: number) => void;
   setInstructions: (key: string, text: string) => void;
   setLineMeta: (
     key: string,
@@ -236,10 +237,18 @@ export function BillProvider({ children }: { children: ReactNode }) {
     (
       product: Product,
       size: ProductSize,
-      opts?: { special_instructions?: string },
+      opts?: { special_instructions?: string; price?: number },
     ) => {
       const instructions = opts?.special_instructions?.trim() || undefined;
-      const key = makeLineKey(product.id, size.id, instructions);
+      const manualPrice = product.allow_manual_price
+        ? opts?.price ?? size.price
+        : size.price;
+      const key = makeLineKey(
+        product.id,
+        size.id,
+        instructions,
+        product.allow_manual_price ? manualPrice : undefined,
+      );
       setState((prev) => {
         const existing = prev.items.find((i) => i.key === key);
         if (existing) {
@@ -263,10 +272,11 @@ export function BillProvider({ children }: { children: ReactNode }) {
               product_image: product.image,
               size_id: size.id,
               size: size.size,
-              price: size.price,
+              price: manualPrice,
               quantity: 1,
               special_instructions: instructions,
               is_deal: isDealProduct(product),
+              allow_manual_price: product.allow_manual_price,
               was_price: size.was_price || undefined,
             },
           ],
@@ -395,6 +405,24 @@ export function BillProvider({ children }: { children: ReactNode }) {
         setState((p) => ({
           ...p,
           items: p.items.filter((i) => i.key !== key),
+        })),
+      setLinePrice: (key, price) =>
+        setState((p) => ({
+          ...p,
+          items: p.items.map((i) => {
+            if (i.key !== key || !i.allow_manual_price) return i;
+            const nextPrice = Math.max(1, Math.round(price));
+            return {
+              ...i,
+              price: nextPrice,
+              key: makeLineKey(
+                i.product_id,
+                i.size_id,
+                i.special_instructions,
+                nextPrice,
+              ),
+            };
+          }),
         })),
       setInstructions: (key, text) =>
         setState((p) => ({

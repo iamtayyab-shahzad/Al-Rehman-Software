@@ -68,6 +68,7 @@ const emptyForm = (categories: Category[]): Omit<Product, "id"> => ({
   image: "",
   available: true,
   featured: false,
+  allowManualPrice: false,
   basePrice: 0,
   pizzaSizes: undefined,
 });
@@ -202,6 +203,7 @@ export default function ProductsPage() {
           image: form.image,
           featured: form.featured,
           available: form.available,
+          allowManualPrice: form.allowManualPrice,
           pizzaSizes,
         });
         toast.success("Product updated");
@@ -213,6 +215,7 @@ export default function ProductsPage() {
           image: form.image,
           featured: form.featured,
           available: form.available,
+          allowManualPrice: form.allowManualPrice,
           pizzaSizes,
         });
         toast.success("Product added");
@@ -474,6 +477,20 @@ export default function ProductsPage() {
               <Switch
                 checked={form.featured}
                 onCheckedChange={(v) => setForm({ ...form, featured: v })}
+              />
+            </div>
+            <div className="flex items-center justify-between rounded-lg border border-zinc-800 px-3 py-3 sm:col-span-2">
+              <div>
+                <Label>Manual price at till</Label>
+                <p className="text-xs text-zinc-500">
+                  Cashier can enter custom price (sweets, weight items).
+                </p>
+              </div>
+              <Switch
+                checked={Boolean(form.allowManualPrice)}
+                onCheckedChange={(v) =>
+                  setForm({ ...form, allowManualPrice: v })
+                }
               />
             </div>
             {useSizes ? (

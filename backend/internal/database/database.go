@@ -15,7 +15,10 @@ import (
 )
 
 func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
-	dsn := buildDSN(cfg)
+	dsn := strings.TrimSpace(os.Getenv("DATABASE_URL"))
+	if dsn == "" {
+		dsn = buildDSN(cfg)
+	}
 
 	gormCfg := &gorm.Config{
 		PrepareStmt: true,
@@ -63,14 +66,14 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 }
 
 func buildDSN(cfg config.DatabaseConfig) string {
-	password := url.QueryEscape(cfg.Password)
-	return fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.Host,
-		cfg.Port,
-		cfg.User,
-		password,
-		cfg.Name,
-		cfg.SSLMode,
-	)
+	u := &url.URL{
+		Scheme: "postgres",
+		User:   url.UserPassword(cfg.User, cfg.Password),
+		Host:   fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
+		Path:   cfg.Name,
+	}
+	q := u.Query()
+	q.Set("sslmode", cfg.SSLMode)
+	u.RawQuery = q.Encode()
+	return u.String()
 }
