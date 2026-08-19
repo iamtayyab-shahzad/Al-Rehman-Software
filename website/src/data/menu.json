@@ -29,119 +29,119 @@
     {
       "displayOrder": 1,
       "id": "10000000-0000-4000-8000-000000000001",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139691/alrehman/categories/sok0i62j92ctsyd496tc.jpg",
       "name": "Deals",
       "slug": "deals"
     },
     {
       "displayOrder": 2,
       "id": "10000000-0000-4000-8000-000000000002",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139693/alrehman/categories/qpucv9k35fdpbwz81qnx.jpg",
       "name": "Standard Pizza",
       "slug": "standard-pizza"
     },
     {
       "displayOrder": 3,
       "id": "10000000-0000-4000-8000-000000000003",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139694/alrehman/categories/eaf4kmod5ekhlq6du08n.jpg",
       "name": "Premium Pizza",
       "slug": "premium-pizza"
     },
     {
       "displayOrder": 4,
       "id": "10000000-0000-4000-8000-000000000004",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139696/alrehman/categories/vnkfzkzbysmc0seryuo2.jpg",
       "name": "Burgers",
       "slug": "burgers"
     },
     {
       "displayOrder": 5,
       "id": "10000000-0000-4000-8000-000000000005",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139697/alrehman/categories/wst0xgkj3uz0qfarsiwo.jpg",
       "name": "Fries",
       "slug": "fries"
     },
     {
       "displayOrder": 6,
       "id": "10000000-0000-4000-8000-000000000006",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139698/alrehman/categories/tho0s1eayqvetmvegtdj.jpg",
       "name": "Pasta",
       "slug": "pasta"
     },
     {
       "displayOrder": 7,
       "id": "10000000-0000-4000-8000-000000000007",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139700/alrehman/categories/behyjq9nrkkg536mqoiy.jpg",
       "name": "Wings \u0026 Snacks",
       "slug": "wings-snacks"
     },
     {
       "displayOrder": 8,
       "id": "10000000-0000-4000-8000-000000000008",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139702/alrehman/categories/y6n1vuax3lobx7l3rezf.jpg",
       "name": "Rolls \u0026 Shawarma",
       "slug": "rolls-shawarma"
     },
     {
       "displayOrder": 9,
       "id": "10000000-0000-4000-8000-000000000009",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139703/alrehman/categories/fkfb7bx2s9faxzofllaj.jpg",
       "name": "Broast",
       "slug": "broast"
     },
     {
       "displayOrder": 10,
       "id": "10000000-0000-4000-8000-000000000010",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139705/alrehman/categories/kjasnklwnmr9mrekfevg.jpg",
       "name": "Sandwiches",
       "slug": "sandwiches"
     },
     {
       "displayOrder": 11,
       "id": "10000000-0000-4000-8000-000000000011",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139707/alrehman/categories/jywpma423vvsnxzelf07.jpg",
       "name": "Chinese",
       "slug": "chinese"
     },
     {
       "displayOrder": 12,
       "id": "10000000-0000-4000-8000-000000000012",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139708/alrehman/categories/lpwhhn0koxcunf3clriq.jpg",
       "name": "Chowmein",
       "slug": "chowmein"
     },
     {
       "displayOrder": 13,
       "id": "10000000-0000-4000-8000-000000000013",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139710/alrehman/categories/rjeitv3yvf1tf2havowx.jpg",
       "name": "Nachos",
       "slug": "nachos"
     },
     {
       "displayOrder": 14,
       "id": "10000000-0000-4000-8000-000000000014",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139711/alrehman/categories/s80opb75hy2ioegvtyg3.jpg",
       "name": "Snacks \u0026 Savouries",
       "slug": "snacks-savouries"
     },
     {
       "displayOrder": 15,
       "id": "10000000-0000-4000-8000-000000000015",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139713/alrehman/categories/cvfxmtczg14gwux8agx1.jpg",
       "name": "Sweets",
       "slug": "sweets"
     },
     {
       "displayOrder": 16,
       "id": "10000000-0000-4000-8000-000000000016",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139716/alrehman/categories/se6acc0ckrzxz6swq6q7.jpg",
       "name": "Biscuits \u0026 Bakery",
       "slug": "biscuits-bakery"
     },
     {
       "displayOrder": 17,
       "id": "10000000-0000-4000-8000-000000000017",
-      "image": "/products/placeholder.svg",
+      "image": "https://res.cloudinary.com/exfo4goy/image/upload/v1787139717/alrehman/categories/oslqqous79vxuvgd7mzs.jpg",
       "name": "Cold Drinks",
       "slug": "cold-drinks"
     }

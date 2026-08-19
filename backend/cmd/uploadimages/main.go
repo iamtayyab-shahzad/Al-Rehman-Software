@@ -37,7 +37,13 @@ type menuDoc struct {
 	Restaurant any `json:"restaurant"`
 	Promotions any `json:"promotions"`
 	Locations  any `json:"locations"`
-	Categories any `json:"categories"`
+	Categories []struct {
+		DisplayOrder int    `json:"displayOrder"`
+		ID           string `json:"id"`
+		Image        string `json:"image"`
+		Name         string `json:"name"`
+		Slug         string `json:"slug"`
+	} `json:"categories"`
 	Products   []struct {
 		ID               string `json:"id"`
 		Category         string `json:"category"`
@@ -149,6 +155,26 @@ var productImagePaths = map[string]string{
 	"Shazan Juice":              "generated/shazan-juice.png",
 }
 
+var categoryImagePaths = map[string]string{
+	"Deals":                 "categories/cat-deals.png",
+	"Standard Pizza":        "categories/cat-standard-pizza.png",
+	"Premium Pizza":         "categories/cat-premium-pizza.png",
+	"Burgers":               "categories/cat-burgers.png",
+	"Fries":                 "categories/cat-fries.png",
+	"Pasta":                 "categories/cat-pasta.png",
+	"Wings & Snacks":        "categories/cat-wings-snacks.png",
+	"Rolls & Shawarma":      "categories/cat-rolls-shawarma.png",
+	"Broast":                "categories/cat-broast.png",
+	"Sandwiches":            "categories/cat-sandwiches.png",
+	"Chinese":               "categories/cat-chinese.png",
+	"Chowmein":              "categories/cat-chowmein.png",
+	"Nachos":                "categories/cat-nachos.png",
+	"Snacks & Savouries":    "categories/cat-snacks-savouries.png",
+	"Sweets":                "categories/cat-sweets.png",
+	"Biscuits & Bakery":     "categories/cat-biscuits-bakery.png",
+	"Cold Drinks":           "categories/cat-cold-drinks.png",
+}
+
 func main() {
 	zipPath := flag.String("zip", "", "path to images.zip (extracted to a temp folder)")
 	dirPath := flag.String("dir", "", "path to extracted images/ root (contains pizzas/, fries/, etc.)")
@@ -221,8 +247,41 @@ func main() {
 		fmt.Printf("  OK       %-28s → %s\n", name, url)
 	}
 
+	for i := range menu.Categories {
+		name := menu.Categories[i].Name
+		rel, ok := categoryImagePaths[name]
+		if !ok {
+			continue
+		}
+		if *onlyMissing && strings.Contains(menu.Categories[i].Image, "res.cloudinary.com") {
+			continue
+		}
+		filePath, err := findImageFile(root, rel)
+		if err != nil {
+			fmt.Printf("  MISSING  cat %-24s → %s (%v)\n", name, rel, err)
+			missing++
+			continue
+		}
+		if *dryRun {
+			fmt.Printf("  DRY-RUN  cat %-24s → %s\n", name, filePath)
+			continue
+		}
+		payload, uploadName, err := prepareUploadPayload(filePath)
+		if err != nil {
+			log.Fatalf("prepare category %q (%s): %v", name, filePath, err)
+		}
+		url, err := cloudinary.UploadImage(context.Background(), cfg, "alrehman/categories", bytes.NewReader(payload), uploadName)
+		if err != nil {
+			log.Fatalf("upload category %q (%s): %v", name, filePath, err)
+		}
+		menu.Categories[i].Image = url
+		uploaded++
+		fmt.Printf("  OK       cat %-24s → %s\n", name, url)
+	}
+
 	if *dryRun {
-		fmt.Printf("\nDry run complete. %d product(s) would be uploaded.\n", len(productImagePaths))
+		fmt.Printf("\nDry run complete. %d product(s) and %d categor(ies) mapped.\n",
+			len(productImagePaths), len(categoryImagePaths))
 		return
 	}
 
@@ -288,7 +347,7 @@ func normalizeRoot(path string) (string, error) {
 		}
 	}
 	// Already the images/ folder if it contains pizzas/ or cold-drinks/
-	for _, sub := range []string{"pizzas", "Pasta", "cold-drinks", "fries", "generated"} {
+	for _, sub := range []string{"pizzas", "Pasta", "cold-drinks", "fries", "generated", "categories"} {
 		if st, err := os.Stat(filepath.Join(path, sub)); err == nil && st.IsDir() {
 			return path, nil
 		}

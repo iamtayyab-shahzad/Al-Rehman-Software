@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/locale-context";
 import { translateCategoryName } from "@/i18n/messages";
-import { categoryBrowseRank } from "@/lib/menu-order";
 import { cn } from "@/lib/utils";
 import {
   clearCatalogCache,
@@ -56,10 +55,9 @@ export default function MenuClient({
 
   const sortedCategories = useMemo(() => {
     return [...categories].sort((a, b) => {
-      const ra = categoryBrowseRank(a.name);
-      const rb = categoryBrowseRank(b.name);
-      if (ra !== rb) return ra - rb;
-      return (a.display_order || 0) - (b.display_order || 0);
+      const order = (a.display_order || 0) - (b.display_order || 0);
+      if (order !== 0) return order;
+      return a.name.localeCompare(b.name);
     });
   }, [categories]);
 
@@ -124,13 +122,9 @@ export default function MenuClient({
       } else if (sizeFilter === "other") {
         result = result.filter((p) => !pizzaCategoryIds.has(p.category_id));
       }
-      // Preferred browse order for All Items (most-bought style grouping).
       result = [...result].sort((a, b) => {
         const ca = categoryById.get(a.category_id);
         const cb = categoryById.get(b.category_id);
-        const ra = categoryBrowseRank(ca?.name || "");
-        const rb = categoryBrowseRank(cb?.name || "");
-        if (ra !== rb) return ra - rb;
         const da = ca?.display_order ?? 0;
         const db = cb?.display_order ?? 0;
         if (da !== db) return da - db;
