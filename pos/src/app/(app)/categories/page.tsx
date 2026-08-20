@@ -101,8 +101,8 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="h-full overflow-y-auto p-4 md:p-6">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-black">Categories</h1>
         <Button onClick={openCreate}>Add Category</Button>
       </div>

@@ -102,8 +102,8 @@ export default function OrdersPage() {
         description="Search, edit pending, complete, or cancel orders"
       />
 
-      <div className="mb-4 flex items-center gap-3">
-        <div className="relative max-w-md flex-1">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="relative w-full max-w-md flex-1 sm:min-w-[240px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <Input
             className="pl-10"
@@ -118,6 +118,7 @@ export default function OrdersPage() {
             size="sm"
             variant={status === value ? "default" : "secondary"}
             onClick={() => setStatusFilter(value)}
+            className="shrink-0"
           >
             {value}
           </Button>

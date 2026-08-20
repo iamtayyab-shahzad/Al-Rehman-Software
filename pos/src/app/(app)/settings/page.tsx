@@ -399,7 +399,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6">
+    <div className="h-full overflow-y-auto p-4 md:p-6">
       <h1 className="mb-6 text-3xl font-black">Settings</h1>
 
       <SyncHealthPanel />

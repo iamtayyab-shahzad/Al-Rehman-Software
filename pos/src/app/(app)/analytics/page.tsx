@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6">
+    <div className="h-full overflow-y-auto p-4 md:p-6">
       <h1 className="mb-6 text-3xl font-black">Analytics</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

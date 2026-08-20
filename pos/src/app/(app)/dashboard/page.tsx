@@ -53,9 +53,9 @@ export default function DashboardPage() {
   const failedCount = failedOrders.length;
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-black">Dashboard</h1>
+    <div className="h-full overflow-y-auto p-4 md:p-6">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl font-black sm:text-3xl">Dashboard</h1>
         <Button asChild size="lg">
           <Link href="/orders/new">Start New Order</Link>
         </Button>

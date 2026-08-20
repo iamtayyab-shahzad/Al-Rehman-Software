@@ -8,15 +8,17 @@ import {
   FolderTree,
   History,
   LayoutDashboard,
+  Menu,
+  Moon,
   Package,
   RefreshCw,
   Settings,
   ShoppingCart,
+  Sun,
   Warehouse,
   Wifi,
   WifiOff,
-  Sun,
-  Moon,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -58,20 +60,18 @@ function formatLastSync(iso: string | null) {
   }
 }
 
-export function Sidebar() {
+function SidebarPanel({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const [sync, setSync] = useState<SyncEngineState>(getSyncState());
 
   useEffect(() => subscribeSync(setSync), []);
 
-  // Same source of truth as Pending Orders page (React Query cache + poll).
   const { data: pendingOrders = [] } = useQuery({
     queryKey: ["orders", "pending"],
     queryFn: ordersApi.pending,
     refetchInterval: () => {
       if (typeof document !== "undefined" && document.hidden) return false;
       if (!isOnline()) return false;
-      // Avoid fighting the sync engine mid-flight.
       if (getSyncState().syncing) return false;
       return 45_000;
     },
@@ -81,7 +81,7 @@ export function Sidebar() {
   const pendingCount = pendingOrders.length;
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950">
+    <>
       <div className="border-b border-zinc-800 px-4 py-5">
         <p className="flex items-center gap-2 text-lg font-black text-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -151,6 +151,7 @@ export function Sidebar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={onNavigate}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition-colors",
                 active
@@ -158,7 +159,7 @@ export function Sidebar() {
                   : "text-zinc-300 hover:bg-zinc-900 hover:text-white",
               )}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-5 w-5 shrink-0" />
               <span className="flex-1">{link.label}</span>
               {showPendingBadge ? (
                 <span
@@ -176,7 +177,52 @@ export function Sidebar() {
           );
         })}
       </nav>
+    </>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <aside className="hidden w-56 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950 lg:flex">
+      <SidebarPanel />
     </aside>
+  );
+}
+
+export function MobileSidebar({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex lg:hidden">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/70"
+        aria-label="Close menu"
+        onClick={onClose}
+      />
+      <aside className="relative z-10 flex h-full w-72 max-w-[85vw] flex-col bg-zinc-950 shadow-xl">
+        <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-4">
+          <p className="font-black text-white">
+            <span className="text-orange-500">{shop.shortName}</span> POS
+          </p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-300 hover:bg-zinc-900"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <SidebarPanel onNavigate={onClose} />
+      </aside>
+    </div>
   );
 }
 
@@ -184,10 +230,12 @@ export function TopBar({
   restaurantName,
   search,
   onSearch,
+  onMenuOpen,
 }: {
   restaurantName: string;
   search?: string;
   onSearch?: (v: string) => void;
+  onMenuOpen?: () => void;
 }) {
   const router = useRouter();
   const { theme, toggleTheme } = usePosTheme();
@@ -223,55 +271,86 @@ export function TopBar({
     : "\u00a0";
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-4 border-b border-zinc-800 bg-black px-4">
-      <div className="min-w-0">
-        <p className="truncate text-lg font-black text-white">{restaurantName}</p>
-        <p className="text-xs text-zinc-400" suppressHydrationWarning>
-          {clockLabel}
-          {!online ? (
-            <span className="ml-2 text-orange-400">· Working offline</span>
+    <header className="shrink-0 border-b border-zinc-800 bg-black px-3 py-3 lg:h-16 lg:px-4 lg:py-0">
+      <div className="flex flex-col gap-3 lg:h-16 lg:flex-row lg:items-center lg:gap-4">
+        <div className="flex min-w-0 items-center gap-2">
+          {onMenuOpen ? (
+            <button
+              type="button"
+              onClick={onMenuOpen}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-900 lg:hidden"
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
           ) : null}
-        </p>
-      </div>
-      {onSearch && (
-        <input
-          value={search}
-          onChange={(e) => onSearch(e.target.value)}
-          placeholder="Search products..."
-          className="ml-auto h-11 w-full max-w-md rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-base text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        />
-      )}
-      <div className={cn("flex gap-2", !onSearch && "ml-auto")}>
-        <button
-          type="button"
-          title={theme === "light" ? "Switch to dark" : "Switch to light background"}
-          onClick={toggleTheme}
-          className="flex h-11 w-11 items-center justify-center rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-900"
-        >
-          {theme === "light" ? (
-            <Moon className="h-5 w-5" />
-          ) : (
-            <Sun className="h-5 w-5" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-base font-black text-white lg:text-lg">
+              {restaurantName}
+            </p>
+            <p
+              className="truncate text-xs text-zinc-400"
+              suppressHydrationWarning
+            >
+              {clockLabel}
+              {!online ? (
+                <span className="ml-2 text-orange-400">· Working offline</span>
+              ) : null}
+            </p>
+          </div>
+        </div>
+
+        {onSearch ? (
+          <input
+            value={search}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Search products..."
+            className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-base text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 lg:max-w-md"
+          />
+        ) : null}
+
+        <div
+          className={cn(
+            "flex flex-wrap items-center gap-2",
+            !onSearch && "lg:ml-auto",
+            onSearch && "lg:ml-auto",
           )}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push("/orders/new")}
-          className="h-11 rounded-lg bg-orange-500 px-4 text-sm font-bold text-black hover:bg-orange-400"
         >
-          New Order
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setToken(null);
-            void sessionRepo.clear();
-            router.push("/login");
-          }}
-          className="h-11 rounded-lg border border-zinc-700 px-4 text-sm font-bold text-zinc-300 hover:bg-zinc-900"
-        >
-          Logout
-        </button>
+          <button
+            type="button"
+            title={
+              theme === "light"
+                ? "Switch to dark"
+                : "Switch to light background"
+            }
+            onClick={toggleTheme}
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-900"
+          >
+            {theme === "light" ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/orders/new")}
+            className="h-11 flex-1 rounded-lg bg-orange-500 px-4 text-sm font-bold text-black hover:bg-orange-400 sm:flex-none"
+          >
+            New Order
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setToken(null);
+              void sessionRepo.clear();
+              router.push("/login");
+            }}
+            className="h-11 flex-1 rounded-lg border border-zinc-700 px-4 text-sm font-bold text-zinc-300 hover:bg-zinc-900 sm:flex-none"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </header>
   );

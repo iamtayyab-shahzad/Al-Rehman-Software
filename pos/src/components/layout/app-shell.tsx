@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Sidebar, TopBar } from "@/components/layout/shell";
+import { Sidebar, MobileSidebar, TopBar } from "@/components/layout/shell";
 import { useMenuSearch } from "@/context/menu-search-context";
 import { TOKEN_KEY, isTokenExpired, isOfflineSessionValid } from "@/lib/utils";
 import { shop } from "@/lib/shop";
@@ -25,6 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const queryClient = useQueryClient();
   const { search, setSearch } = useMenuSearch();
+  const [navOpen, setNavOpen] = useState(false);
   const isNewOrder = pathname.startsWith("/orders/new");
 
   useEffect(() => {
@@ -112,11 +113,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-black text-white">
       <Sidebar />
+      <MobileSidebar open={navOpen} onClose={() => setNavOpen(false)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar
           restaurantName={settings?.restaurant_name || shop.name}
           search={isNewOrder ? search : undefined}
           onSearch={isNewOrder ? setSearch : undefined}
+          onMenuOpen={() => setNavOpen(true)}
         />
         <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
       </div>

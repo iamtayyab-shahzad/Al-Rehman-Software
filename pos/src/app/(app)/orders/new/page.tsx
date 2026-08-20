@@ -573,7 +573,7 @@ export default function NewOrderPage() {
 
   return (
     <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[1fr_380px]">
-      <div className="flex min-h-0 flex-col overflow-hidden border-r border-zinc-800">
+      <div className="flex min-h-0 flex-col overflow-hidden lg:border-r lg:border-zinc-800">
         {showMenuLoading ? (
           <div className="flex flex-1 items-center justify-center p-8 text-zinc-400">
             Loading menu…
@@ -652,7 +652,7 @@ export default function NewOrderPage() {
         </div>
       </div>
 
-      <aside className="flex min-h-0 flex-col bg-zinc-950">
+      <aside className="flex max-h-[50vh] min-h-0 flex-col border-t border-zinc-800 bg-zinc-950 lg:max-h-none lg:border-t-0">
         <div className="border-b border-zinc-800 p-4">
           <h2 className="text-xl font-black text-white">
             {bill.editingOrderId ? "Editing Pending Order" : "Current Bill"}
