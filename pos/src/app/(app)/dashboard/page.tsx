@@ -106,7 +106,7 @@ export default function DashboardPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         <QuickLink href="/orders/new" title="New Order" desc="Create walk-in or phone order" />
         <QuickLink href="/orders/pending" title="Pending" desc="Resume or complete saved orders" />
-        <QuickLink href="/products" title="Products" desc="Browse the official menu catalog" />
+        <QuickLink href="/expenses" title="Expenses" desc="Log salaries, rent, utilities, and stock costs" />
       </div>
     </div>
   );

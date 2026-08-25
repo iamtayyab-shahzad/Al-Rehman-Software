@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
-  Boxes,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -17,7 +16,6 @@ import {
   Tags,
   Users,
   Globe,
-  Wallet,
   X,
   Sun,
   Moon,
@@ -34,13 +32,11 @@ const NAV = [
   { href: "/products", label: "Products", icon: Package },
   { href: "/categories", label: "Categories", icon: Tags },
   { href: "/deals", label: "Deals & Offers", icon: Percent },
-  { href: "/website-settings", label: "Website Settings", icon: Globe },
   { href: "/orders", label: "Orders", icon: ShoppingBag },
   { href: "/customers", label: "Customers", icon: Users },
-  { href: "/inventory", label: "Inventory", icon: Boxes },
-  { href: "/expenses", label: "Expenses", icon: Wallet },
   { href: "/profit-loss", label: "Profit & Loss", icon: Receipt },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/website-settings", label: "Website Settings", icon: Globe },
   { href: "/restaurant-settings", label: "Restaurant Settings", icon: Settings },
 ];
 

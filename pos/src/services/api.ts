@@ -1329,3 +1329,93 @@ export const analyticsApi = {
       [],
     ),
 };
+
+export type PosExpense = {
+  id: string;
+  category: string;
+  title: string;
+  amount: number;
+  expenseDate: string;
+  paymentMethod: string;
+  notes: string;
+  receiptImage: string;
+  recurrence: string;
+};
+
+export const expensesApi = {
+  categories: () => apiFetch<string[]>("/expenses/categories"),
+  list: async (): Promise<PosExpense[]> => {
+    const rows = await apiFetch<
+      {
+        id: string;
+        category: string;
+        title: string;
+        amount: number;
+        expense_date: string;
+        payment_method: string;
+        notes: string;
+        receipt_image: string;
+        recurrence: string;
+      }[]
+    >("/expenses");
+    return (rows || []).map((e) => ({
+      id: e.id,
+      category: e.category,
+      title: e.title || "",
+      amount: Number(e.amount || 0),
+      expenseDate: (e.expense_date || "").slice(0, 10),
+      paymentMethod: e.payment_method || "cash",
+      notes: e.notes || "",
+      receiptImage: e.receipt_image || "",
+      recurrence: e.recurrence || "NONE",
+    }));
+  },
+  create: async (payload: {
+    category: string;
+    title?: string;
+    amount: number;
+    expenseDate: string;
+    paymentMethod?: string;
+    notes?: string;
+    recurrence?: string;
+  }) => {
+    await apiFetch("/expenses", {
+      method: "POST",
+      body: JSON.stringify({
+        category: payload.category,
+        title: payload.title || "",
+        amount: Number(payload.amount || 0),
+        expense_date: new Date(payload.expenseDate).toISOString(),
+        payment_method: payload.paymentMethod || "cash",
+        notes: payload.notes || "",
+        recurrence: payload.recurrence || "NONE",
+      }),
+    });
+  },
+  update: async (
+    id: string,
+    payload: {
+      category: string;
+      title?: string;
+      amount: number;
+      expenseDate: string;
+      paymentMethod?: string;
+      notes?: string;
+      recurrence?: string;
+    },
+  ) => {
+    await apiFetch(`/expenses/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        category: payload.category,
+        title: payload.title || "",
+        amount: Number(payload.amount || 0),
+        expense_date: new Date(payload.expenseDate).toISOString(),
+        payment_method: payload.paymentMethod || "cash",
+        notes: payload.notes || "",
+        recurrence: payload.recurrence || "NONE",
+      }),
+    });
+  },
+  remove: (id: string) => apiFetch(`/expenses/${id}`, { method: "DELETE" }),
+};
