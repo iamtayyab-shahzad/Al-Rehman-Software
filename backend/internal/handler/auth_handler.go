@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"backend/internal/dto"
+	"backend/internal/middleware"
 	"backend/internal/service"
 	"backend/internal/utils"
 
@@ -11,11 +13,15 @@ import (
 )
 
 type AuthHandler struct {
-	service *service.AuthService
+	service    *service.AuthService
+	loginLimit *middleware.LoginRateLimiter
 }
 
 func NewAuthHandler(service *service.AuthService) *AuthHandler {
-	return &AuthHandler{service: service}
+	return &AuthHandler{
+		service:    service,
+		loginLimit: middleware.NewLoginRateLimiter(),
+	}
 }
 
 // StaffLogin godoc
@@ -32,11 +38,21 @@ func (h *AuthHandler) StaffLogin(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	token, err := h.service.StaffLogin(input)
-	if err != nil {
+	ip := middleware.ClientIP(c)
+	account := middleware.AccountFromStaff(input.Username)
+	if err := h.loginLimit.Check(ip, account); err != nil {
 		HandleError(c, err)
 		return
 	}
+	token, err := h.service.StaffLogin(input)
+	if err != nil {
+		if isUnauthorized(err) {
+			h.loginLimit.RecordFailure(ip, account)
+		}
+		HandleError(c, err)
+		return
+	}
+	h.loginLimit.RecordSuccess(ip, account)
 	utils.Success(c, http.StatusOK, "staff login successful", gin.H{"token": token})
 }
 
@@ -76,11 +92,21 @@ func (h *AuthHandler) CustomerLogin(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	customer, token, err := h.service.CustomerLogin(input)
-	if err != nil {
+	ip := middleware.ClientIP(c)
+	account := middleware.AccountFromCustomer(input.Phone)
+	if err := h.loginLimit.Check(ip, account); err != nil {
 		HandleError(c, err)
 		return
 	}
+	customer, token, err := h.service.CustomerLogin(input)
+	if err != nil {
+		if isUnauthorized(err) {
+			h.loginLimit.RecordFailure(ip, account)
+		}
+		HandleError(c, err)
+		return
+	}
+	h.loginLimit.RecordSuccess(ip, account)
 	utils.Success(c, http.StatusOK, "customer login successful", gin.H{
 		"customer": customer,
 		"token":    token,
@@ -106,4 +132,12 @@ func (h *AuthHandler) CustomerResetPassword(c *gin.Context) {
 		return
 	}
 	utils.Success(c, http.StatusOK, "password updated", nil)
+}
+
+func isUnauthorized(err error) bool {
+	var appErr *utils.AppError
+	if errors.As(err, &appErr) {
+		return appErr.Status == http.StatusUnauthorized
+	}
+	return false
 }

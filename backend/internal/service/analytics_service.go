@@ -44,12 +44,21 @@ func (s *AnalyticsService) YesterdaySales() (int, error) {
 	return s.repo.SalesBetween(start, end)
 }
 
+// SalesPeriodItem is one product's sold qty/revenue inside a lookup window.
+type SalesPeriodItem struct {
+	ProductID   string `json:"product_id"`
+	ProductName string `json:"product_name"`
+	Quantity    int    `json:"quantity"`
+	Revenue     int    `json:"revenue"`
+}
+
 // SalesPeriodResult is completed sales for a Karachi calendar day or inclusive range.
 type SalesPeriodResult struct {
-	Total      int       `json:"total"`
-	OrderCount int64     `json:"order_count"`
-	From       time.Time `json:"from"`
-	To         time.Time `json:"to"`
+	Total      int               `json:"total"`
+	OrderCount int64             `json:"order_count"`
+	From       time.Time         `json:"from"`
+	To         time.Time         `json:"to"`
+	Items      []SalesPeriodItem `json:"items"`
 }
 
 // SalesForPeriod returns sales for [fromDate, toDate] inclusive (YYYY-MM-DD, Asia/Karachi).
@@ -70,12 +79,51 @@ func (s *AnalyticsService) SalesForPeriod(fromDate, toDate string) (*SalesPeriod
 	if err != nil {
 		return nil, err
 	}
+	rawItems, err := s.repo.ItemSalesBetween(start, end)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]SalesPeriodItem, 0, len(rawItems))
+	for _, row := range rawItems {
+		items = append(items, SalesPeriodItem{
+			ProductID:   asString(row["product_id"]),
+			ProductName: asString(row["product_name"]),
+			Quantity:    asInt(row["quantity"]),
+			Revenue:     asInt(row["revenue"]),
+		})
+	}
 	return &SalesPeriodResult{
 		Total:      total,
 		OrderCount: count,
 		From:       start,
 		To:         endDay,
+		Items:      items,
 	}, nil
+}
+
+func asString(v any) string {
+	if v == nil {
+		return ""
+	}
+	switch t := v.(type) {
+	case string:
+		return t
+	default:
+		return ""
+	}
+}
+
+func asInt(v any) int {
+	switch t := v.(type) {
+	case int:
+		return t
+	case int64:
+		return int(t)
+	case float64:
+		return int(t)
+	default:
+		return 0
+	}
 }
 
 func parseKarachiDate(value string) (time.Time, error) {

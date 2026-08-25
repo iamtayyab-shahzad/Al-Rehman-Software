@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"backend/internal/dto"
+	"backend/internal/repository"
 	"backend/internal/service"
 	"backend/internal/utils"
 
@@ -137,10 +138,29 @@ func (h *OrderHandler) List(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, "invalid since (use RFC3339)")
 		return
 	}
+	createdFrom, createdTo, err := parseOptionalCreatedRange(c)
+	if err != nil {
+		utils.Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
-	orders, err := h.service.ListOrders(limit, offset, since)
+	orders, total, err := h.service.ListOrders(repository.OrderListFilter{
+		Limit:       limit,
+		Offset:      offset,
+		Since:       since,
+		CreatedFrom: createdFrom,
+		CreatedTo:   createdTo,
+		Status:      strings.TrimSpace(c.Query("status")),
+		Query:       strings.TrimSpace(c.Query("q")),
+	})
 	if err != nil {
 		HandleError(c, err)
+		return
+	}
+	// POS and older clients expect a bare array. Admin passes include_total=1
+	// for paginated { items, total, limit, offset }.
+	if strings.TrimSpace(c.Query("include_total")) == "1" {
+		utils.Success(c, http.StatusOK, "orders list", pageResult(orders, total, limit, offset))
 		return
 	}
 	utils.Success(c, http.StatusOK, "orders list", orders)

@@ -100,6 +100,43 @@ func (r *AnalyticsRepository) BestSellingProducts(limit int) ([]map[string]any, 
 	return result, nil
 }
 
+// ItemSalesBetween returns every product sold on COMPLETED orders in [start, end),
+// ordered by quantity descending. Used by cloud sales lookup for a day/range.
+func (r *AnalyticsRepository) ItemSalesBetween(start, end time.Time) ([]map[string]any, error) {
+	type row struct {
+		ProductID   string
+		ProductName string
+		Quantity    int
+		Revenue     int
+	}
+	var rows []row
+	err := r.db.Table("order_items").
+		Select(`order_items.product_id::text as product_id,
+			COALESCE(products.name, '') as product_name,
+			COALESCE(SUM(order_items.quantity), 0) as quantity,
+			COALESCE(SUM(order_items.price * order_items.quantity), 0) as revenue`).
+		Joins("JOIN orders ON orders.id = order_items.order_id").
+		Joins("LEFT JOIN products ON products.id = order_items.product_id").
+		Where("orders.order_status = ? AND orders.created_at >= ? AND orders.created_at < ?",
+			"COMPLETED", start, end).
+		Group("order_items.product_id, products.name").
+		Order("quantity desc").
+		Scan(&rows).Error
+	if err != nil {
+		return nil, err
+	}
+	result := make([]map[string]any, 0, len(rows))
+	for _, rrow := range rows {
+		result = append(result, map[string]any{
+			"product_id":   rrow.ProductID,
+			"product_name": rrow.ProductName,
+			"quantity":     rrow.Quantity,
+			"revenue":      rrow.Revenue,
+		})
+	}
+	return result, nil
+}
+
 func (r *AnalyticsRepository) RemainingInventory() ([]domain.Inventory, error) {
 	var inv []domain.Inventory
 	if err := r.db.Order("stock asc").Find(&inv).Error; err != nil {

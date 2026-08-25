@@ -27,9 +27,14 @@ import {
   discardAction,
   healIndexedDb,
   listDeadActions,
+  listLocalOrders,
   listPendingActions,
   reviveDeadAction,
 } from "@/lib/offline-db";
+import {
+  resolveFailedSyncOrder,
+  type FailedSyncOrderSummary,
+} from "@/lib/failed-sync-order";
 import {
   clearObsoleteOrderQueue,
   clearSyncConflicts,
@@ -37,6 +42,7 @@ import {
   runSync,
   subscribeSync,
 } from "@/lib/sync-engine";
+import type { OfflineAction } from "@/types";
 
 function SyncHealthPanel() {
   const [busy, setBusy] = useState(false);
@@ -142,14 +148,23 @@ function SyncHealthPanel() {
 
 function FailedSyncPanel() {
   const [items, setItems] = useState<
-    Awaited<ReturnType<typeof listDeadActions>>
+    { action: OfflineAction; order: FailedSyncOrderSummary | null }[]
   >([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = async () => {
     setLoading(true);
     try {
-      setItems(await listDeadActions());
+      const [dead, locals] = await Promise.all([
+        listDeadActions(),
+        listLocalOrders(),
+      ]);
+      setItems(
+        dead.map((action) => ({
+          action,
+          order: resolveFailedSyncOrder(action, locals),
+        })),
+      );
     } finally {
       setLoading(false);
     }
@@ -177,7 +192,7 @@ function FailedSyncPanel() {
           disabled={loading || items.length === 0}
           onClick={async () => {
             await healIndexedDb();
-            for (const item of items) await reviveDeadAction(item.id);
+            for (const item of items) await reviveDeadAction(item.action.id);
             toast.success("Retrying failed sync…");
             await refresh();
             void runSync("manual");
@@ -190,17 +205,49 @@ function FailedSyncPanel() {
         <p className="text-sm text-zinc-500">Loading…</p>
       ) : (
         <div className="space-y-2">
-          {items.map((item) => (
+          {items.map(({ action, order }) => (
             <div
-              key={item.id}
+              key={action.id}
               className="flex flex-wrap items-start justify-between gap-2 rounded-lg bg-black/40 px-3 py-3"
             >
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 space-y-1">
                 <p className="text-sm font-semibold text-zinc-200">
-                  {item.type}
+                  {action.type}
+                  {order?.order_number ? (
+                    <span className="ml-2 font-normal text-zinc-400">
+                      · {order.order_number}
+                    </span>
+                  ) : null}
                 </p>
-                <p className="break-all text-xs text-zinc-500">
-                  {item.error || "Unknown error"}
+                {order ? (
+                  <div className="text-xs text-zinc-300">
+                    <p>
+                      <span className="text-zinc-500">Customer:</span>{" "}
+                      {order.customer_name}
+                    </p>
+                    <p className="mt-0.5 break-words">
+                      <span className="text-zinc-500">Items:</span>{" "}
+                      {order.items_label}
+                    </p>
+                    <p className="mt-0.5">
+                      <span className="text-zinc-500">Total:</span>{" "}
+                      {formatPrice(order.grand_total)}
+                      {order.created_at ? (
+                        <>
+                          {" "}
+                          <span className="text-zinc-500">·</span>{" "}
+                          {new Date(order.created_at).toLocaleString()}
+                        </>
+                      ) : null}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-zinc-500">
+                    No linked local order details found for this action.
+                  </p>
+                )}
+                <p className="break-all text-xs text-amber-200/80">
+                  {action.error || "Unknown error"}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -208,7 +255,7 @@ function FailedSyncPanel() {
                   size="sm"
                   variant="secondary"
                   onClick={async () => {
-                    await reviveDeadAction(item.id);
+                    await reviveDeadAction(action.id);
                     toast.success("Queued for retry");
                     await refresh();
                     void runSync("manual");
@@ -220,7 +267,7 @@ function FailedSyncPanel() {
                   size="sm"
                   variant="danger"
                   onClick={async () => {
-                    await discardAction(item.id);
+                    await discardAction(action.id);
                     toast.message("Discarded");
                     await refresh();
                   }}

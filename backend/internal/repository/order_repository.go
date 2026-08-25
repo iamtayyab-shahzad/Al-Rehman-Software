@@ -104,11 +104,61 @@ func (r *OrderRepository) GetByIDTx(tx *gorm.DB, id uuid.UUID) (*domain.Order, e
 	return &order, nil
 }
 
+// OrderListFilter is the optional filter set for ListPaged.
+// Empty fields are ignored. CreatedFrom/CreatedTo are half-open [from, to).
+type OrderListFilter struct {
+	Limit       int
+	Offset      int
+	Since       *time.Time
+	CreatedFrom *time.Time
+	CreatedTo   *time.Time
+	Status      string
+	Query       string
+}
+
+func (r *OrderRepository) applyListFilter(q *gorm.DB, f OrderListFilter) *gorm.DB {
+	if f.Since != nil {
+		q = q.Where("updated_at >= ? OR created_at >= ?", *f.Since, *f.Since)
+	}
+	if f.CreatedFrom != nil {
+		q = q.Where("created_at >= ?", *f.CreatedFrom)
+	}
+	if f.CreatedTo != nil {
+		q = q.Where("created_at < ?", *f.CreatedTo)
+	}
+	if status := strings.ToUpper(strings.TrimSpace(f.Status)); status != "" && status != "ALL" {
+		q = q.Where("order_status = ?", status)
+	}
+	if raw := strings.TrimSpace(f.Query); raw != "" {
+		like := "%" + raw + "%"
+		digits := strings.Map(func(r rune) rune {
+			if r >= '0' && r <= '9' {
+				return r
+			}
+			return -1
+		}, raw)
+		if digits != "" {
+			q = q.Where(
+				"order_number ILIKE ? OR customer_name ILIKE ? OR phone ILIKE ? OR REPLACE(phone, '-', '') LIKE ?",
+				like, like, like, "%"+digits+"%",
+			)
+		} else {
+			q = q.Where(
+				"order_number ILIKE ? OR customer_name ILIKE ?",
+				like, like,
+			)
+		}
+	}
+	return q
+}
+
 // ListPaged returns orders newest-first with heavy relation preloads, but
 // always bounded by limit/offset to prevent high memory usage.
-// When since is non-nil, only rows with updated_at or created_at >= since
+// When Since is non-nil, only rows with updated_at or created_at >= since
 // are returned (additive filter for POS incremental polls).
-func (r *OrderRepository) ListPaged(limit, offset int, since *time.Time) ([]domain.Order, error) {
+// Total is the count matching filters (ignores limit/offset).
+func (r *OrderRepository) ListPaged(f OrderListFilter) ([]domain.Order, int64, error) {
+	limit, offset := f.Limit, f.Offset
 	if limit <= 0 {
 		limit = 50
 	}
@@ -116,23 +166,27 @@ func (r *OrderRepository) ListPaged(limit, offset int, since *time.Time) ([]doma
 		offset = 0
 	}
 
-	var orders []domain.Order
-	q := orderListPreloads(r.db)
-	if since != nil {
-		q = q.Where("updated_at >= ? OR created_at >= ?", *since, *since)
+	countQ := r.applyListFilter(r.db.Model(&domain.Order{}), f)
+	var total int64
+	if err := countQ.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
+
+	var orders []domain.Order
+	q := r.applyListFilter(orderListPreloads(r.db), f)
 	if err := q.
 		Order("created_at desc").
 		Limit(limit).
 		Offset(offset).
 		Find(&orders).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return orders, nil
+	return orders, total, nil
 }
 
 func (r *OrderRepository) List() ([]domain.Order, error) {
-	return r.ListPaged(50, 0, nil)
+	rows, _, err := r.ListPaged(OrderListFilter{Limit: 50, Offset: 0})
+	return rows, err
 }
 
 // ListByCustomerID returns the customer's newest orders (capped), with items for reorder.

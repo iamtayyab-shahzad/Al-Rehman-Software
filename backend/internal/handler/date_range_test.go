@@ -42,3 +42,39 @@ func TestParseDateRange_WeekIsMondayStartKarachi(t *testing.T) {
 		t.Fatalf("week should be 7 days, got %d", days)
 	}
 }
+
+func TestParseOptionalCreatedRangeEmpty(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	c, _ := gin.CreateTestContext(httptest.NewRecorder())
+	c.Request = httptest.NewRequest(http.MethodGet, "/orders?limit=50", nil)
+	from, to, err := parseOptionalCreatedRange(c)
+	if err != nil {
+		t.Fatalf("unexpected err: %v", err)
+	}
+	if from != nil || to != nil {
+		t.Fatalf("expected nil range, got %v %v", from, to)
+	}
+}
+
+func TestParseOptionalCreatedRangeInclusiveDay(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	c, _ := gin.CreateTestContext(httptest.NewRecorder())
+	c.Request = httptest.NewRequest(
+		http.MethodGet,
+		"/orders?start=2026-08-01&end=2026-08-01",
+		nil,
+	)
+	from, to, err := parseOptionalCreatedRange(c)
+	if err != nil {
+		t.Fatalf("unexpected err: %v", err)
+	}
+	if from == nil || to == nil {
+		t.Fatal("expected from and to")
+	}
+	loc := businessLocation()
+	wantFrom := time.Date(2026, 8, 1, 0, 0, 0, 0, loc)
+	wantTo := time.Date(2026, 8, 2, 0, 0, 0, 0, loc)
+	if !from.Equal(wantFrom) || !to.Equal(wantTo) {
+		t.Fatalf("got %v–%v want %v–%v", from, to, wantFrom, wantTo)
+	}
+}

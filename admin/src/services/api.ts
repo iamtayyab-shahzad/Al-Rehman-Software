@@ -554,11 +554,19 @@ export type AnalyticsInventoryRow = {
   supplier: string;
 };
 
+export type AnalyticsSalesPeriodItem = {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  revenue: number;
+};
+
 export type AnalyticsSalesPeriod = {
   total: number;
   order_count: number;
   from: string;
   to: string;
+  items?: AnalyticsSalesPeriodItem[];
 };
 
 export const analyticsApi = {
@@ -1216,6 +1224,32 @@ export const ordersApi = {
     if (params?.offset != null) search.set("offset", String(params.offset));
     const qs = search.toString();
     return apiFetch<BackendOrder[]>(`/orders${qs ? `?${qs}` : "?limit=200"}`);
+  },
+  /** Paginated admin browse — requires include_total on the API. */
+  listPage: (params?: {
+    limit?: number;
+    offset?: number;
+    status?: string;
+    q?: string;
+    start?: string;
+    end?: string;
+  }) => {
+    const search = new URLSearchParams();
+    search.set("include_total", "1");
+    search.set("limit", String(params?.limit ?? 50));
+    if (params?.offset != null) search.set("offset", String(params.offset));
+    if (params?.status && params.status !== "ALL") {
+      search.set("status", params.status);
+    }
+    if (params?.q?.trim()) search.set("q", params.q.trim());
+    if (params?.start) search.set("start", params.start);
+    if (params?.end) search.set("end", params.end);
+    return apiFetch<{
+      items: BackendOrder[];
+      total: number;
+      limit: number;
+      offset: number;
+    }>(`/orders?${search}`);
   },
   pending: () => apiFetch<BackendOrder[]>("/orders/pending"),
   update: (

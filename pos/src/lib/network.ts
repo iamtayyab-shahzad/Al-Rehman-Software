@@ -3,8 +3,13 @@
 /** After a network failure, skip remote calls for this long (use IndexedDB). */
 const UNREACHABLE_COOLDOWN_MS = 45_000;
 
+/** Cold-start friendly budget for manual / reconnect catch-up sync. */
+const EXTENDED_SYNC_TIMEOUT_MS = 45_000;
+
 let forcedOfflineUntil = 0;
 let consecutiveFailures = 0;
+/** When set, apiTimeoutMs() uses this instead of the short interactive budget. */
+let syncTimeoutOverrideMs: number | null = null;
 
 export function isBrowserOnline() {
   if (typeof navigator === "undefined") return true;
@@ -15,10 +20,19 @@ export function isBrowserOnline() {
  * Effective connectivity for POS.
  * False when the browser reports offline OR we recently confirmed the API
  * is unreachable (avoids long hangs while Wi‑Fi says "online").
+ *
+ * User-facing Online/Offline labels should use {@link isBrowserOnline} (or the
+ * sync engine's `online` flag, which tracks the browser), not this helper —
+ * a single cold-start timeout must not flip the status badge during catch-up.
  */
 export function isOnline() {
   if (!isBrowserOnline()) return false;
   return Date.now() >= forcedOfflineUntil;
+}
+
+/** True while markUnreachable() cooldown is active (API may still be up). */
+export function isApiCooldownActive() {
+  return isBrowserOnline() && Date.now() < forcedOfflineUntil;
 }
 
 export const POS_CONNECTIVITY_EVENT = "pos-connectivity";
@@ -26,7 +40,13 @@ export const POS_CONNECTIVITY_EVENT = "pos-connectivity";
 function emitConnectivity(online: boolean) {
   if (typeof window === "undefined") return;
   window.dispatchEvent(
-    new CustomEvent(POS_CONNECTIVITY_EVENT, { detail: { online } }),
+    new CustomEvent(POS_CONNECTIVITY_EVENT, {
+      detail: {
+        online,
+        /** Distinguishes browser offline from circuit-breaker cooldown. */
+        forced: !online && isBrowserOnline(),
+      },
+    }),
   );
 }
 
@@ -61,8 +81,21 @@ export function clearForcedOffline() {
   emitConnectivity(true);
 }
 
+/**
+ * Use a longer fetch timeout for bulk catch-up (manual Sync / reconnect).
+ * Pair with {@link endExtendedSyncTimeout} in a finally block.
+ */
+export function beginExtendedSyncTimeout(ms = EXTENDED_SYNC_TIMEOUT_MS) {
+  syncTimeoutOverrideMs = Math.max(8_000, ms);
+}
+
+export function endExtendedSyncTimeout() {
+  syncTimeoutOverrideMs = null;
+}
+
 /** Shorter timeouts while we are already in a failure streak. */
 export function apiTimeoutMs() {
+  if (syncTimeoutOverrideMs != null) return syncTimeoutOverrideMs;
   if (!isBrowserOnline()) return 2_000;
   if (consecutiveFailures >= 2) return 3_000;
   if (consecutiveFailures === 1) return 5_000;

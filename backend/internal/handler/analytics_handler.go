@@ -77,6 +77,7 @@ func (h *AnalyticsHandler) SalesPeriod(c *gin.Context) {
 		"order_count": result.OrderCount,
 		"from":        result.From.Format("2006-01-02"),
 		"to":          result.To.Format("2006-01-02"),
+		"items":       result.Items,
 	})
 }
 

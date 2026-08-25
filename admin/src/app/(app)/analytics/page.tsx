@@ -249,30 +249,98 @@ export default function AnalyticsPage() {
           </Button>
         </div>
         {lookup ? (
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            <StatCard
-              label={
-                lookup.from === lookup.to
-                  ? `Sales on ${lookup.from}`
-                  : `Sales ${lookup.from} → ${lookup.to}`
-              }
-              value={formatPrice(lookup.total)}
-              icon={<TrendingUp className="h-5 w-5" />}
-            />
-            <StatCard
-              label="Completed orders"
-              value={String(lookup.order_count)}
-              icon={<TrendingUp className="h-5 w-5" />}
-            />
-            <StatCard
-              label="Period"
-              value={
-                lookup.from === lookup.to
-                  ? lookup.from
-                  : `${lookup.from} → ${lookup.to}`
-              }
-              icon={<TrendingUp className="h-5 w-5" />}
-            />
+          <div className="mt-5 space-y-5">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <StatCard
+                label={
+                  lookup.from === lookup.to
+                    ? `Sales on ${lookup.from}`
+                    : `Sales ${lookup.from} → ${lookup.to}`
+                }
+                value={formatPrice(lookup.total)}
+                icon={<TrendingUp className="h-5 w-5" />}
+              />
+              <StatCard
+                label="Completed orders"
+                value={String(lookup.order_count)}
+                icon={<TrendingUp className="h-5 w-5" />}
+              />
+              <StatCard
+                label="Period"
+                value={
+                  lookup.from === lookup.to
+                    ? lookup.from
+                    : `${lookup.from} → ${lookup.to}`
+                }
+                icon={<TrendingUp className="h-5 w-5" />}
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-3 text-base font-bold">
+                {lookup.from === lookup.to
+                  ? `Items sold on ${lookup.from}`
+                  : `Items sold ${lookup.from} → ${lookup.to}`}
+              </h3>
+              {!lookup.items?.length ? (
+                <p className="text-sm text-zinc-400">
+                  No completed item sales in this period.
+                </p>
+              ) : (
+                <div className="overflow-x-auto rounded-lg border border-zinc-800">
+                  <table className="w-full min-w-[420px] text-left text-sm">
+                    <thead className="bg-zinc-950 text-xs uppercase text-zinc-500">
+                      <tr>
+                        <th className="px-3 py-2">#</th>
+                        <th className="px-3 py-2">Item</th>
+                        <th className="px-3 py-2 text-right">Qty sold</th>
+                        <th className="px-3 py-2 text-right">Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lookup.items.map((item, idx) => (
+                        <tr
+                          key={item.product_id || `${item.product_name}-${idx}`}
+                          className="border-t border-zinc-800"
+                        >
+                          <td className="px-3 py-2 text-zinc-500">{idx + 1}</td>
+                          <td className="px-3 py-2 font-semibold">
+                            {item.product_name || "Unknown product"}
+                          </td>
+                          <td className="px-3 py-2 text-right text-orange-400">
+                            {item.quantity}
+                          </td>
+                          <td className="px-3 py-2 text-right font-semibold">
+                            {formatPrice(Number(item.revenue || 0))}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className="border-t border-zinc-700 bg-zinc-950/80">
+                        <td className="px-3 py-2" colSpan={2}>
+                          <span className="font-bold">Total units</span>
+                        </td>
+                        <td className="px-3 py-2 text-right font-bold text-orange-400">
+                          {lookup.items.reduce(
+                            (s, i) => s + Number(i.quantity || 0),
+                            0,
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-right font-bold">
+                          {formatPrice(
+                            lookup.items.reduce(
+                              (s, i) => s + Number(i.revenue || 0),
+                              0,
+                            ),
+                          )}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
         ) : null}
       </Card>

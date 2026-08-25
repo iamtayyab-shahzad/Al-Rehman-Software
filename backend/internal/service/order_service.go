@@ -83,6 +83,11 @@ func (s *OrderService) CreateOrder(
 		}
 	}
 
+	// Walk-in POS always sends "Walk-in Customer"; keep a safe default if a
+	// client omits it so blank names cannot land via /orders/walkin.
+	if customerName == "" && orderType == "walkin" {
+		customerName = "Walk-in Customer"
+	}
 	if customerName == "" {
 		return nil, utils.NewAppError(http.StatusBadRequest, "customer name is required")
 	}
@@ -303,7 +308,13 @@ func (s *OrderService) UpdateOrder(id uuid.UUID, input dto.UpdateOrderRequest) e
 
 	updates := map[string]any{}
 	if input.CustomerName != nil {
-		updates["customer_name"] = *input.CustomerName
+		// Same rule as CreateOrder: never persist blank/whitespace names
+		// (admin edit previously could clear a walk-in ticket to "").
+		name := strings.TrimSpace(*input.CustomerName)
+		if name == "" {
+			return utils.NewAppError(http.StatusBadRequest, "customer name is required")
+		}
+		updates["customer_name"] = name
 	}
 	if input.Phone != nil {
 		updates["phone"] = *input.Phone
@@ -572,8 +583,8 @@ func (s *OrderService) DeleteOrder(id uuid.UUID) error {
 	return tx.Commit().Error
 }
 
-func (s *OrderService) ListOrders(limit, offset int, since *time.Time) ([]domain.Order, error) {
-	return s.orderRepo.ListPaged(limit, offset, since)
+func (s *OrderService) ListOrders(f repository.OrderListFilter) ([]domain.Order, int64, error) {
+	return s.orderRepo.ListPaged(f)
 }
 
 func (s *OrderService) ListCustomerOrders(customerID uuid.UUID, limit int) ([]domain.Order, error) {

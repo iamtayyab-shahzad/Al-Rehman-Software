@@ -24,8 +24,11 @@ import {
 import { apiFetch, ApiError } from "@/lib/api-client";
 import {
   bindConnectivityListeners,
+  beginExtendedSyncTimeout,
   clearForcedOffline,
+  endExtendedSyncTimeout,
   forceOfflineNow,
+  isBrowserOnline,
   isNetworkError,
   isOnline,
   isPermanentSyncError,
@@ -92,11 +95,11 @@ let started = false;
 
 /** Push remaining due queue items without waiting for the slow interval. */
 function scheduleDrainSoon() {
-  if (!isOnline()) return;
+  if (!isBrowserOnline()) return;
   if (drainTimer) clearTimeout(drainTimer);
   drainTimer = setTimeout(() => {
     drainTimer = null;
-    if (!isOnline()) return;
+    if (!isBrowserOnline()) return;
     void runSync("drain");
   }, 50);
 }
@@ -314,11 +317,11 @@ export async function refreshPendingCount() {
 }
 
 function scheduleRetry(delay = backoffMs) {
-  // Don't schedule network retries while effectively offline — saves CPU.
-  if (!isOnline()) return;
+  // Don't schedule retries when the browser itself is offline.
+  if (!isBrowserOnline()) return;
   if (retryTimer) clearTimeout(retryTimer);
   retryTimer = setTimeout(() => {
-    if (!isOnline()) return;
+    if (!isBrowserOnline()) return;
     void runSync("retry");
   }, delay);
 }
@@ -875,14 +878,38 @@ async function reviveDeadActionsOnReconnect() {
 }
 
 export async function runSync(reason: string = "manual"): Promise<void> {
-  if (!isOnline()) {
+  // User-facing online badge follows the browser — not the API cooldown.
+  if (!isBrowserOnline()) {
     setState({ online: false });
     await refreshPendingCount();
     return;
   }
+  setState({ online: true });
+
+  const catchUp =
+    reason === "manual" ||
+    reason === "online" ||
+    reason === "startup" ||
+    reason === "visible" ||
+    reason === "drain" ||
+    reason === "retry" ||
+    reason === "enqueue";
+
+  // Cooldown from one slow request must not block catch-up of a full backlog.
+  if (!isOnline()) {
+    if (catchUp) {
+      clearForcedOffline();
+    } else {
+      await refreshPendingCount();
+      return;
+    }
+  }
   if (syncPromise) return syncPromise;
 
   syncPromise = (async () => {
+    if (catchUp) {
+      beginExtendedSyncTimeout();
+    }
     setState({ online: true, syncing: true, completed: 0, current_action: null });
     try {
       if (reason === "online" || reason === "startup" || reason === "manual" || reason === "visible") {
@@ -910,6 +937,11 @@ export async function runSync(reason: string = "manual"): Promise<void> {
       const skipped: OfflineAction[] = [];
 
       const runOne = async (action: OfflineAction, collectSkips: boolean) => {
+        if (!isBrowserOnline()) {
+          hadFailure = true;
+          lastError = "Browser offline";
+          return;
+        }
         const stillOpen = (await listPendingActions()).some(
           (a) => a.id === action.id,
         );
@@ -962,21 +994,21 @@ export async function runSync(reason: string = "manual"): Promise<void> {
           });
           if (isNetworkError(err) || isQueueableError(err)) {
             bumpBackoff();
-            throw err;
+            // Do NOT abort the rest of the batch — one cold timeout must not
+            // kill CREATE/COMPLETE for the remaining queued tickets.
+            return;
           }
         }
       };
 
-      try {
-        for (const action of due) {
-          await runOne(action, true);
-        }
-        // Second pass: COMPLETE/CANCEL that waited on CREATE in this same run.
-        for (const action of skipped) {
-          await runOne(action, false);
-        }
-      } catch {
-        /* network break already recorded */
+      for (const action of due) {
+        if (!isBrowserOnline()) break;
+        await runOne(action, true);
+      }
+      // Second pass: COMPLETE/CANCEL that waited on CREATE in this same run.
+      for (const action of skipped) {
+        if (!isBrowserOnline()) break;
+        await runOne(action, false);
       }
 
       await pruneSyncedActions(50);
@@ -1080,12 +1112,19 @@ export async function runSync(reason: string = "manual"): Promise<void> {
         if (!a.next_retry_at) return true;
         return new Date(a.next_retry_at).getTime() <= nowMs;
       });
-      if (syncedSomething && dueLeft && isOnline()) {
+      if (syncedSomething && dueLeft && isBrowserOnline() && isOnline()) {
         scheduleDrainSoon();
       }
     } finally {
+      if (catchUp) {
+        endExtendedSyncTimeout();
+      }
       await refreshPendingCount();
-      setState({ syncing: false, current_action: null });
+      setState({
+        syncing: false,
+        current_action: null,
+        online: isBrowserOnline(),
+      });
       syncPromise = null;
     }
   })();
@@ -1150,10 +1189,16 @@ export function startSyncEngine() {
   window.addEventListener("online", onOnline);
   window.addEventListener("offline", onOffline);
   const onConnectivity = (e: Event) => {
-    const online = Boolean(
-      (e as CustomEvent<{ online?: boolean }>).detail?.online,
-    );
-    setState({ online });
+    const detail = (e as CustomEvent<{ online?: boolean; forced?: boolean }>)
+      .detail;
+    const online = Boolean(detail?.online);
+    const forced = Boolean(detail?.forced);
+    // Circuit-breaker cooldown (forced=true while browser still online) must
+    // not flip the Online/Offline badge during catch-up syncing.
+    if (!online && forced && isBrowserOnline()) {
+      return;
+    }
+    setState({ online: isBrowserOnline() && online });
     // API reachable again after a forced-offline cooldown — push immediately.
     if (online) {
       resetBackoff();
@@ -1164,23 +1209,24 @@ export function startSyncEngine() {
 
   const onVisible = () => {
     if (document.hidden) return;
-    if (!isOnline()) return;
+    if (!isBrowserOnline()) return;
     void runSync("visible");
   };
   document.addEventListener("visibilitychange", onVisible);
 
-  setState({ online: isOnline() });
+  setState({ online: isBrowserOnline() });
 
   const interval = setInterval(() => {
     if (typeof document !== "undefined" && document.hidden) return;
-    if (!isOnline()) {
+    if (!isBrowserOnline()) {
+      setState({ online: false });
       void refreshPendingCount();
       return;
     }
     void runSync("interval");
   }, 45_000);
 
-  if (isOnline()) void runSync("startup");
+  if (isBrowserOnline()) void runSync("startup");
 
   return () => {
     window.removeEventListener("online", onOnline);

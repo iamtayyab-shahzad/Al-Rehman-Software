@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { ordersApi, sessionRepo } from "@/services/api";
-import { isOnline, POS_CONNECTIVITY_EVENT } from "@/lib/network";
+import { isBrowserOnline, POS_CONNECTIVITY_EVENT } from "@/lib/network";
 import {
   getSyncState,
   runSync,
@@ -71,7 +71,7 @@ function SidebarPanel({ onNavigate }: { onNavigate?: () => void }) {
     queryFn: ordersApi.pending,
     refetchInterval: () => {
       if (typeof document !== "undefined" && document.hidden) return false;
-      if (!isOnline()) return false;
+      if (!isBrowserOnline()) return false;
       if (getSyncState().syncing) return false;
       return 45_000;
     },
@@ -249,7 +249,7 @@ export function TopBar({
   }, []);
 
   useEffect(() => {
-    const sync = () => setOnline(isOnline());
+    const sync = () => setOnline(isBrowserOnline());
     sync();
     window.addEventListener("online", sync);
     window.addEventListener("offline", sync);
