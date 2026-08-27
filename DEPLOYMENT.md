@@ -287,6 +287,15 @@ Full production documentation (architecture, sync, IndexedDB, offline workflows,
 
 → [`pos/docs/PRODUCTION.md`](./pos/docs/PRODUCTION.md)
 
+---
+
+## Clone for another shop
+
+This stack is reusable per restaurant, but each shop needs its **own DB + API + deploys**.  
+Branding/menu start from `shared/shop.json` + `shared/menu.json`.
+
+→ [`NEW-SHOP.md`](./NEW-SHOP.md) (checklist + `node scripts/sync-shop-config.mjs`)
+
 After deploying POS + API together:
 
 1. Login online once (warms IndexedDB)

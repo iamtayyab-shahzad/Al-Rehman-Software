@@ -1031,7 +1031,16 @@ export async function runSync(reason: string = "manual"): Promise<void> {
         reason === "visible" ||
         (reason === "interval" && (syncedSomething || due.length === 0));
 
-      if (shouldRefreshCatalog && (!hadFailure || reason === "manual")) {
+      // Catalog / discount-rules pull is independent of individual action
+      // failures: one timed-out CREATE must not starve the refresh after a
+      // productive drain (or when the queue was already empty).
+      const catalogPullOk =
+        syncedSomething || due.length === 0 || reason === "manual";
+
+      if (shouldRefreshCatalog && catalogPullOk) {
+        // A single queue timeout may have armed the circuit breaker mid-batch;
+        // clear it so inventory / discount-rules can still hit the network.
+        clearForcedOffline();
         try {
           const wantIncremental = shouldUseIncrementalCatalogPull(reason);
           const lastPull = wantIncremental
