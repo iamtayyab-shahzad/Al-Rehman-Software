@@ -12,7 +12,7 @@ import {
 } from "@/lib/offline-db";
 import type { Order } from "@/types";
 
-const DB_NAME = "krunchies-pos";
+const DB_NAME = "alrehman-pos";
 
 function order(
   partial: Partial<Order> &

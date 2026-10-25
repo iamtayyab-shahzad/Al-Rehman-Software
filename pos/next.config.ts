@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // Native SQLite module — must not be bundled into the Next server chunk.
+  serverExternalPackages: ["better-sqlite3"],
   poweredByHeader: false,
   compress: true,
   images: {

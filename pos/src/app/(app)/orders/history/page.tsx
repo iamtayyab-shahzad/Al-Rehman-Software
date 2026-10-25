@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,17 +9,34 @@ import { printCustomerReceipt, ensureReceiptItemNames } from "@/lib/receipt";
 import { cn, formatOrderItemsSummary, formatPrice, LAST_RECEIPT_KEY } from "@/lib/utils";
 import { ordersApi, productsApi, settingsApi } from "@/services/api";
 import type { Order } from "@/types";
+import {
+  canUseLocalArchive,
+  searchLocalArchive,
+} from "@/lib/local-archive/client";
 
 export default function OrderHistoryPage() {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
+  const deferredQ = useDeferredValue(q);
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: ordersApi.list,
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+  });
+  const archiveEnabled = canUseLocalArchive();
+  const { data: archiveOrders = [], isFetching: archiveFetching } = useQuery({
+    queryKey: ["local-archive-orders", deferredQ, status],
+    queryFn: () =>
+      searchLocalArchive({
+        q: deferredQ,
+        status,
+        limit: 1000,
+      }),
+    enabled: archiveEnabled,
+    staleTime: 10_000,
   });
   const { data: settings } = useQuery({
     queryKey: ["settings"],
@@ -32,7 +49,8 @@ export default function OrderHistoryPage() {
     staleTime: 5 * 60_000,
   });
 
-  const showHistoryLoading = isLoading && orders.length === 0;
+  const showHistoryLoading =
+    isLoading && orders.length === 0 && archiveOrders.length === 0;
 
   const productNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -41,7 +59,17 @@ export default function OrderHistoryPage() {
   }, [products]);
 
   const filtered = useMemo(() => {
-    return orders
+    const byId = new Map<string, Order>();
+    // Years of history from the PC SQLite file…
+    for (const o of archiveOrders) {
+      if (o?.id) byId.set(o.id, o);
+    }
+    // …live IndexedDB rows win (fresher status / sync flags).
+    for (const o of orders) {
+      if (o?.id) byId.set(o.id, o);
+    }
+
+    return [...byId.values()]
       .filter((o) => (status === "all" ? true : o.order_status === status))
       .filter((o) => {
         if (!q) return true;
@@ -55,10 +83,10 @@ export default function OrderHistoryPage() {
           return name.toLowerCase().includes(s);
         });
         return (
-          o.customer_name.toLowerCase().includes(s) ||
-          o.phone.includes(s) ||
-          o.order_number.toLowerCase().includes(s) ||
-          o.id.toLowerCase().includes(s) ||
+          (o.customer_name || "").toLowerCase().includes(s) ||
+          (o.phone || "").includes(s) ||
+          (o.order_number || "").toLowerCase().includes(s) ||
+          (o.id || "").toLowerCase().includes(s) ||
           itemHit
         );
       })
@@ -66,7 +94,7 @@ export default function OrderHistoryPage() {
         (a, b) =>
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
-  }, [orders, q, status, productNameById]);
+  }, [orders, archiveOrders, q, status, productNameById]);
 
   const complete = async (order: Order) => {
     try {
@@ -105,6 +133,12 @@ export default function OrderHistoryPage() {
   return (
     <div className="h-full overflow-y-auto p-4 md:p-6">
       <h1 className="mb-6 text-3xl font-black">Order History</h1>
+      {archiveEnabled ? (
+        <p className="mb-3 text-sm text-emerald-400/90">
+          Searching this PC archive
+          {archiveFetching ? "…" : ""} — older years stay available instantly.
+        </p>
+      ) : null}
       <div className="mb-4 flex flex-wrap gap-3">
         <Input
           className="max-w-sm"

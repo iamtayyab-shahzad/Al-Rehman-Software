@@ -168,6 +168,8 @@ describe("kitchen ticket layout", () => {
     expect(html).toContain("Staff notes:");
     expect(html).toContain("write-space");
     expect(html).toContain("width: 62mm");
+    expect(html).toContain("AL-REHMAN FAST FOOD");
+    expect(html).not.toContain("KRUNCHIES");
     expect(html).not.toMatch(/class="qty">4x/);
     expect(html).not.toContain("font-weight: 800");
     expect(html).not.toContain("www.krunchies.pk");

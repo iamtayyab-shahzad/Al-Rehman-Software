@@ -43,6 +43,130 @@ import {
   subscribeSync,
 } from "@/lib/sync-engine";
 import type { OfflineAction } from "@/types";
+import {
+  canUseLocalArchive,
+  exportLocalArchiveCsv,
+  fetchLocalArchiveStatus,
+  type LocalArchiveStatusResponse,
+} from "@/lib/local-archive/client";
+
+function formatBytes(n: number) {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function LocalArchivePanel() {
+  const [status, setStatus] = useState<LocalArchiveStatusResponse | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const refresh = async () => {
+    if (!canUseLocalArchive()) {
+      setStatus({ enabled: false, reason: "not_local_host" });
+      return;
+    }
+    setStatus(await fetchLocalArchiveStatus());
+  };
+
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  if (!canUseLocalArchive()) {
+    return (
+      <section className="mb-8 rounded-xl border border-zinc-700 bg-zinc-950 p-5">
+        <h2 className="text-xl font-bold text-zinc-100">PC order archive</h2>
+        <p className="mt-1 text-sm text-zinc-400">
+          Long-term order storage (SQLite file) is available when you run the
+          local Al-rehman POS on this computer — not on the cloud emergency URL.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mb-8 rounded-xl border border-emerald-500/40 bg-zinc-950 p-5">
+      <h2 className="text-xl font-bold text-emerald-300">PC order archive</h2>
+      <p className="mt-1 text-sm text-zinc-400">
+        Every order is copied into a SQLite file on this PC so years of sales
+        stay searchable even if the browser cache is cleared. Cloud sync still
+        runs as usual.
+      </p>
+      {status?.enabled ? (
+        <div className="mt-3 space-y-1 text-sm text-zinc-300">
+          <p>
+            Orders saved:{" "}
+            <span className="font-bold text-white">{status.orderCount}</span>
+            {" · "}
+            File size: {formatBytes(status.dbBytes)}
+          </p>
+          <p className="break-all text-xs text-zinc-500">
+            Folder: {status.archiveDir}
+          </p>
+          <p className="break-all text-xs text-zinc-500">
+            Database: {status.dbPath}
+          </p>
+        </div>
+      ) : (
+        <p className="mt-3 text-sm text-amber-300">
+          Archive not ready yet
+          {status && "reason" in status && status.reason
+            ? ` (${status.reason})`
+            : ""}
+          . Place a few orders, then refresh.
+        </p>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              await refresh();
+              toast.success("Archive status refreshed");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Refresh
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              const result = await exportLocalArchiveCsv();
+              if (!result.ok) {
+                toast.error(result.error || "Export failed");
+                return;
+              }
+              toast.success(
+                `Excel CSV saved (${result.rows ?? 0} rows). Path copied style — see folder above.`,
+              );
+              await refresh();
+              if (result.csvPath) {
+                try {
+                  await navigator.clipboard.writeText(result.csvPath);
+                  toast.message("CSV path copied to clipboard");
+                } catch {
+                  /* ignore */
+                }
+              }
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Export Excel CSV
+        </Button>
+      </div>
+    </section>
+  );
+}
 
 function SyncHealthPanel() {
   const [busy, setBusy] = useState(false);
@@ -450,6 +574,7 @@ export default function SettingsPage() {
       <h1 className="mb-6 text-3xl font-black">Settings</h1>
 
       <SyncHealthPanel />
+      <LocalArchivePanel />
       <FailedSyncPanel />
       <StorageHealthPanel />
 

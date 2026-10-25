@@ -18,7 +18,7 @@ import {
 import { localTodaySales } from "@/lib/local-sales";
 import type { Order } from "@/types";
 
-const DB_NAME = "krunchies-pos";
+const DB_NAME = "alrehman-pos";
 
 function sale(partial: Partial<Order> & Pick<Order, "id">): Order {
   const now = "2026-08-15T12:00:00+05:00";

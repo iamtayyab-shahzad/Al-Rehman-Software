@@ -21,6 +21,15 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
+/** Printable shop name — never show a previous-brand leftover from settings. */
+function receiptShopName(settings?: Settings | null) {
+  const fromSettings = (settings?.restaurant_name || "").trim();
+  if (fromSettings && !/krunchies/i.test(fromSettings)) {
+    return fromSettings;
+  }
+  return shop.name || shop.shortName || "Al-rehman";
+}
+
 function stripPrintScripts(html: string) {
   return html.replace(/<script>[\s\S]*?<\/script>/gi, "");
 }
@@ -532,7 +541,7 @@ export function buildKitchenReceiptHtml(order: Order) {
 </style>
 </head>
 <body>
-  <div class="shop">KRUNCHIES PIZZA</div>
+  <div class="shop">${escapeHtml(receiptShopName().toUpperCase())}</div>
   <div class="banner">* Kitchen Order Ticket *</div>
   <div class="meta">
     <div>Ticket No. : ${escapeHtml(order.order_number || order.id)}</div>
@@ -786,7 +795,7 @@ export function buildCustomerReceiptHtml(
 </style>
 </head>
 <body>
-  <h1>${escapeHtml(settings?.restaurant_name || shop.name)}</h1>
+  <h1>${escapeHtml(receiptShopName(settings))}</h1>
   <div class="meta">
     ${escapeHtml(settings?.phone || "")}<br/>
     ${reprint ? "<strong>REPRINT</strong><br/>" : ""}

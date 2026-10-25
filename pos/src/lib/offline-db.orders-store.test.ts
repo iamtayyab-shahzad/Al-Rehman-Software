@@ -10,8 +10,9 @@ import {
   upsertLocalOrder,
 } from "@/lib/offline-db";
 import type { Order } from "@/types";
+import { shop } from "@/lib/shop";
 
-const DB_NAME = "krunchies-pos";
+const DB_NAME = shop.posDbName;
 
 function sale(
   partial: Partial<Order> & Pick<Order, "id" | "order_status">,

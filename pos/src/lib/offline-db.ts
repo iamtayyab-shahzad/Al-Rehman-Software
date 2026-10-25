@@ -21,6 +21,7 @@ import {
   type HealReport,
 } from "@/lib/storage-health";
 import { shop } from "@/lib/shop";
+import { mirrorOrdersToLocalArchive } from "@/lib/local-archive/client";
 
 export type CachedSession = {
   username: string;
@@ -634,6 +635,8 @@ export async function replaceOrders(orders: Order[]) {
   }
   await tx.done;
   await rebuildCustomersFromOrders(capped);
+  // Full history lives forever in the PC SQLite archive (IndexedDB is capped).
+  mirrorOrdersToLocalArchive(orders.filter(isValidOrderRow));
 }
 
 /** Keep local COMPLETED sales for this many Karachi calendar days past today. */
@@ -817,6 +820,7 @@ export async function mergeOrders(orders: Order[]) {
     await tx.store.put(o);
   }
   await tx.done;
+  mirrorOrdersToLocalArchive(orders.filter(isValidOrderRow));
 }
 
 export async function upsertLocalOrder(order: Order) {
@@ -836,6 +840,7 @@ export async function upsertLocalOrder(order: Order) {
   );
   await db.put("orders", order);
   await upsertCustomerFromOrder(order, !existed);
+  mirrorOrdersToLocalArchive(order);
 }
 
 export async function deleteLocalOrder(id: string) {

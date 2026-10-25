@@ -1,4 +1,4 @@
-/* Krunchies POS Service Worker — App Shell + static assets
+/* Al-rehman POS Service Worker — App Shell + static assets
  *
  * v7: Soft navigations (RSC) no longer hang on slow Wi‑Fi.
  * Core screens serve from cache / fail fast so the UI opens immediately;
@@ -318,7 +318,7 @@ async function shellFallback(request) {
   return (
     cached ||
     new Response(
-      "<!doctype html><title>Offline</title><h1>Krunchies POS</h1><p>Open New Order from the home screen after connecting once.</p><p><a href='/orders/new'>New Order</a> · <a href='/orders/pending'>Pending</a></p>",
+      "<!doctype html><title>Offline</title><h1>Al-rehman POS</h1><p>Open New Order from the home screen after connecting once.</p><p><a href='/orders/new'>New Order</a> · <a href='/orders/pending'>Pending</a></p>",
       {
         status: 503,
         headers: { "Content-Type": "text/html" },

@@ -6,7 +6,28 @@ $ErrorActionPreference = "Stop"
 $PosRoot = Split-Path -Parent $PSScriptRoot
 $AppUrl = "http://127.0.0.1:$Port/orders/new"
 $HealthUrl = "http://127.0.0.1:$Port/"
-$DataRoot = Join-Path $env:LOCALAPPDATA "KrunchiesPOS"
+
+$ShopJson = Join-Path $PosRoot "src\data\shop.json"
+$ShopShortName = "Al-rehman"
+$PosFolder = "alrehman-pos"
+if (Test-Path $ShopJson) {
+  try {
+    $shop = Get-Content $ShopJson -Raw | ConvertFrom-Json
+    if ($shop.shortName) { $ShopShortName = [string]$shop.shortName }
+    if ($shop.posDbName) { $PosFolder = [string]$shop.posDbName }
+  } catch {
+    # Keep defaults if shop.json is unreadable.
+  }
+}
+$PosAppTitle = "$ShopShortName POS"
+
+$DataRoot = Join-Path $env:LOCALAPPDATA $PosFolder
+$LegacyDataRoot = Join-Path $env:LOCALAPPDATA "KrunchiesPOS"
+# Keep offline IndexedDB if this PC already ran under the old folder name.
+if (-not (Test-Path $DataRoot) -and (Test-Path $LegacyDataRoot)) {
+  $DataRoot = $LegacyDataRoot
+}
+
 $LogRoot = Join-Path $DataRoot "logs"
 $ChromeProfile = (Join-Path $DataRoot "chrome-profile" | Resolve-Path -ErrorAction SilentlyContinue)
 if (-not $ChromeProfile) {
@@ -44,7 +65,7 @@ function Show-PosError([string]$Message) {
   Add-Type -AssemblyName PresentationFramework
   [System.Windows.MessageBox]::Show(
     $Message,
-    "Krunchies POS",
+    $PosAppTitle,
     [System.Windows.MessageBoxButton]::OK,
     [System.Windows.MessageBoxImage]::Error
   ) | Out-Null
@@ -57,7 +78,7 @@ function Start-ChromePosApp {
     [string]$Url
   )
   # ProcessStartInfo.Arguments must quote paths that contain spaces — otherwise
-  # Chrome treats C:\Users\krunchies pizza\... as two tokens (C:\Users\krunchies).
+  # Chrome treats C:\Users\Some Name\... as two tokens.
   $profileQuoted = $ProfileDir -replace '"', '\"'
   $args = @(
     "--user-data-dir=`"$profileQuoted`""
@@ -121,7 +142,7 @@ if (-not $Chrome) {
 
 # If POS Chrome is already running with this profile, focus it instead of
 # opening a second app window (two windows share IndexedDB and can double-sync).
-$profileNeedle = "KrunchiesPOS"
+$profileNeedle = Split-Path -Leaf $DataRoot
 $existing = Get-CimInstance Win32_Process -Filter "Name = 'chrome.exe'" -ErrorAction SilentlyContinue |
   Where-Object {
     $_.CommandLine -and
@@ -130,9 +151,9 @@ $existing = Get-CimInstance Win32_Process -Filter "Name = 'chrome.exe'" -ErrorAc
   }
 if ($existing) {
   $activate = New-Object -ComObject WScript.Shell
-  $null = $activate.AppActivate("Krunchies POS")
-  if (-not $activate.AppActivate("Krunchies POS")) {
-    $null = $activate.AppActivate("Krunchies")
+  $null = $activate.AppActivate($PosAppTitle)
+  if (-not $activate.AppActivate($PosAppTitle)) {
+    $null = $activate.AppActivate($ShopShortName)
   }
   exit 0
 }

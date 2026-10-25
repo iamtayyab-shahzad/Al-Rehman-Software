@@ -1,10 +1,10 @@
 @echo off
 REM ============================================================
-REM Krunchies POS — emergency remote (Vercel) launcher
+REM Al-rehman POS — emergency remote (Vercel) launcher
 REM ============================================================
 REM Prefer the local production launcher for shop speed:
 REM   Setup once:  scripts\Setup-Local-POS.bat
-REM   Daily use:   Desktop shortcut "Krunchies POS"
+REM   Daily use:   Desktop shortcut "Al-rehman POS"
 REM                (scripts\Launch-POS-Local.vbs)
 REM
 REM Keep this bat as a cloud fallback if the local PC build is unavailable.

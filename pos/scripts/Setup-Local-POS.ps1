@@ -5,6 +5,17 @@ param(
 $ErrorActionPreference = "Stop"
 $PosRoot = Split-Path -Parent $PSScriptRoot
 $EnvFile = Join-Path $PosRoot ".env.local"
+$ShopJson = Join-Path $PosRoot "src\data\shop.json"
+$ShopShortName = "Al-rehman"
+if (Test-Path $ShopJson) {
+  try {
+    $shop = Get-Content $ShopJson -Raw | ConvertFrom-Json
+    if ($shop.shortName) { $ShopShortName = [string]$shop.shortName }
+  } catch {
+    # Keep default name if shop.json is unreadable.
+  }
+}
+$PosAppTitle = "$ShopShortName POS"
 
 function Stop-WithMessage([string]$Message) {
   Write-Host ""
@@ -14,7 +25,7 @@ function Stop-WithMessage([string]$Message) {
   exit 1
 }
 
-Write-Host "Krunchies POS - local production setup" -ForegroundColor Cyan
+Write-Host "$PosAppTitle - local production setup" -ForegroundColor Cyan
 Write-Host "This is a one-time owner/developer setup. Cashiers will not run it."
 Write-Host ""
 
@@ -31,23 +42,36 @@ if (-not (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
   Stop-WithMessage "npm was not found. Reinstall Node.js LTS and run setup again."
 }
 
+$savedApiUrl = ""
 if (-not $ApiUrl -and (Test-Path $EnvFile)) {
   $existing = Get-Content $EnvFile |
     Where-Object { $_ -match "^NEXT_PUBLIC_API_URL=" } |
     Select-Object -First 1
   if ($existing) {
-    $ApiUrl = ($existing -replace "^NEXT_PUBLIC_API_URL=", "").Trim()
+    $savedApiUrl = ($existing -replace "^NEXT_PUBLIC_API_URL=", "").Trim()
   }
 }
 
-if (-not $ApiUrl -or $ApiUrl -match "localhost|127\.0\.0\.1") {
-  Write-Host "Enter the deployed cloud API URL used by the live POS." -ForegroundColor Yellow
-  Write-Host "Example: https://your-api.onrender.com/api/v1"
-  $ApiUrl = (Read-Host "Cloud API URL").Trim()
+if (-not $ApiUrl) {
+  if ($savedApiUrl -and $savedApiUrl -notmatch "localhost|127\.0\.0\.1") {
+    Write-Host "Saved cloud API URL:" -ForegroundColor Yellow
+    Write-Host "  $savedApiUrl"
+    Write-Host "Press Enter to keep it, or paste a new URL (must end with /api/v1)."
+    $typed = (Read-Host "Cloud API URL").Trim()
+    $ApiUrl = if ($typed) { $typed } else { $savedApiUrl }
+  } else {
+    Write-Host "Enter the deployed cloud API URL used by the live POS." -ForegroundColor Yellow
+    Write-Host "Example: https://your-api.onrender.com/api/v1"
+    $ApiUrl = (Read-Host "Cloud API URL").Trim()
+  }
 }
 
 if (-not [Uri]::IsWellFormedUriString($ApiUrl, [UriKind]::Absolute)) {
   Stop-WithMessage "The API URL is not valid. Run setup again with the full https://.../api/v1 URL."
+}
+
+if ($ApiUrl -notmatch "/api/v1/?$") {
+  Stop-WithMessage "The API URL must end with /api/v1 (example: https://your-api.onrender.com/api/v1)."
 }
 
 $ApiUrl = $ApiUrl.TrimEnd("/")
@@ -139,14 +163,14 @@ try {
 }
 
 $Desktop = [Environment]::GetFolderPath("Desktop")
-$ShortcutPath = Join-Path $Desktop "Krunchies POS.lnk"
+$ShortcutPath = Join-Path $Desktop "$PosAppTitle.lnk"
 $LauncherPath = Join-Path $PSScriptRoot "Launch-POS-Local.vbs"
 $Shell = New-Object -ComObject WScript.Shell
 $Shortcut = $Shell.CreateShortcut($ShortcutPath)
 $Shortcut.TargetPath = "$env:SystemRoot\System32\wscript.exe"
 $Shortcut.Arguments = "`"$LauncherPath`""
 $Shortcut.WorkingDirectory = $PSScriptRoot
-$Shortcut.Description = "Krunchies POS - local production app"
+$Shortcut.Description = "$PosAppTitle - local production app"
 
 $ChromeCandidates = @(
   "$env:ProgramFiles\Google\Chrome\Application\chrome.exe",
@@ -159,9 +183,15 @@ if ($Chrome) {
 }
 $Shortcut.Save()
 
+# Remove old brand shortcut so cashiers are not confused after rebrand.
+$LegacyShortcut = Join-Path $Desktop "Krunchies POS.lnk"
+if ((Test-Path $LegacyShortcut) -and ($LegacyShortcut -ne $ShortcutPath)) {
+  Remove-Item $LegacyShortcut -Force -ErrorAction SilentlyContinue
+}
+
 Write-Host ""
 Write-Host "Local POS is ready." -ForegroundColor Green
 Write-Host "Desktop shortcut: $ShortcutPath"
-Write-Host "Cashiers only need to double-click 'Krunchies POS'."
+Write-Host "Cashiers only need to double-click '$PosAppTitle'."
 Write-Host ""
 Read-Host "Press Enter to close"

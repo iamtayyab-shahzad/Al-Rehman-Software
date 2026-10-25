@@ -8,7 +8,7 @@ import {
 } from "@/lib/offline-db";
 import type { InventoryItem } from "@/types";
 
-const DB_NAME = "krunchies-pos";
+const DB_NAME = "alrehman-pos";
 
 function item(
   partial: Partial<InventoryItem> & Pick<InventoryItem, "id" | "name" | "stock">,
