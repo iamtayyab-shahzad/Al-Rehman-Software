@@ -635,7 +635,7 @@ export async function replaceOrders(orders: Order[]) {
   }
   await tx.done;
   await rebuildCustomersFromOrders(capped);
-  // Full history lives forever in the PC SQLite archive (IndexedDB is capped).
+  // Full history lives forever in the PC file archive (IndexedDB is capped).
   mirrorOrdersToLocalArchive(orders.filter(isValidOrderRow));
 }
 

@@ -19,7 +19,7 @@ import {
   WifiOff,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { ordersApi, sessionRepo } from "@/services/api";
@@ -239,6 +239,7 @@ export function TopBar({
   const { theme, toggleTheme } = usePosTheme();
   const [now, setNow] = useState<Date | null>(null);
   const [online, setOnline] = useState(true);
+  const clearSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setNow(new Date());
@@ -302,6 +303,31 @@ export function TopBar({
           <input
             value={search}
             onChange={(e) => onSearch(e.target.value)}
+            onFocus={() => {
+              if (clearSearchTimer.current) {
+                clearTimeout(clearSearchTimer.current);
+                clearSearchTimer.current = null;
+              }
+            }}
+            onBlur={() => {
+              // Clear leftover junk queries when leaving the box so the menu
+              // returns. Delay so a product tap still hits before the list resets.
+              if (clearSearchTimer.current) clearTimeout(clearSearchTimer.current);
+              clearSearchTimer.current = setTimeout(() => {
+                onSearch("");
+                clearSearchTimer.current = null;
+              }, 180);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                if (clearSearchTimer.current) {
+                  clearTimeout(clearSearchTimer.current);
+                  clearSearchTimer.current = null;
+                }
+                onSearch("");
+                (e.target as HTMLInputElement).blur();
+              }
+            }}
             placeholder="Search products..."
             className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-base text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-orange-500 lg:max-w-md"
           />

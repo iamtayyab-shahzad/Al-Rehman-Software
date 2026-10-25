@@ -21,8 +21,9 @@ export function getArchiveDir(overrideRoot?: string): string {
   return path.join(getLocalDataRoot(overrideRoot), "archive");
 }
 
+/** Durable order archive — plain JSON file, no native compiler required. */
 export function getArchiveDbPath(overrideRoot?: string): string {
-  return path.join(getArchiveDir(overrideRoot), "orders.sqlite");
+  return path.join(getArchiveDir(overrideRoot), "orders.archive.json");
 }
 
 export function ensureArchiveDir(overrideRoot?: string): string {

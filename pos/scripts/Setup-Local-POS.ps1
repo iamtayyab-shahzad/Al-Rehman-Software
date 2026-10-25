@@ -1,5 +1,6 @@
 param(
-  [string]$ApiUrl = ""
+  [string]$ApiUrl = "",
+  [switch]$ForceRebuild
 )
 
 $ErrorActionPreference = "Stop"
@@ -25,8 +26,20 @@ function Stop-WithMessage([string]$Message) {
   exit 1
 }
 
+function Read-InstallStamp([string]$Path) {
+  if (-not (Test-Path $Path)) {
+    return @{ LockHash = ""; ApiUrl = "" }
+  }
+  $lines = @(Get-Content $Path | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+  return @{
+    LockHash = if ($lines.Count -ge 1) { $lines[0] } else { "" }
+    ApiUrl   = if ($lines.Count -ge 2) { $lines[1] } else { "" }
+  }
+}
+
 Write-Host "$PosAppTitle - local production setup" -ForegroundColor Cyan
 Write-Host "This is a one-time owner/developer setup. Cashiers will not run it."
+Write-Host "Tip: after this succeeds once, use Pack-Local-POS-For-Shop.bat to copy to the shop PC (no download there)."
 Write-Host ""
 
 if (-not (Get-Command node.exe -ErrorAction SilentlyContinue)) {
@@ -134,29 +147,54 @@ if ($listeners.Count -gt 0) {
 
 $LockFile = Join-Path $PosRoot "package-lock.json"
 $ModulesDir = Join-Path $PosRoot "node_modules"
-$StampFile = Join-Path $ModulesDir ".krunchies-install-stamp"
+$StampFile = Join-Path $PosRoot ".pos-install-stamp"
+$LegacyStampFile = Join-Path $ModulesDir ".krunchies-install-stamp"
 $LockHash = (Get-FileHash -Path $LockFile -Algorithm SHA256).Hash
-$InstalledHash = if (Test-Path $StampFile) { (Get-Content $StampFile -Raw).Trim() } else { "" }
+$stamp = Read-InstallStamp $StampFile
+if (-not $stamp.LockHash -and (Test-Path $LegacyStampFile)) {
+  $stamp = @{
+    LockHash = (Get-Content $LegacyStampFile -Raw).Trim()
+    ApiUrl   = ""
+  }
+}
+
+$depsOk = (Test-Path $ModulesDir) -and ($stamp.LockHash -eq $LockHash)
+$buildId = Join-Path $PosRoot ".next\BUILD_ID"
+$buildOk = (Test-Path $buildId) -and ($stamp.LockHash -eq $LockHash) -and ($stamp.ApiUrl -eq $ApiUrl) -and (-not $ForceRebuild)
 
 Push-Location $PosRoot
 try {
   Write-Host ""
-  if ((Test-Path $ModulesDir) -and $InstalledHash -eq $LockHash) {
-    Write-Host "Dependencies already match package-lock.json - skipping install." -ForegroundColor Green
+  if ($depsOk) {
+    Write-Host "Dependencies already match package-lock.json - skipping download." -ForegroundColor Green
   } else {
-    Write-Host "Installing locked dependencies..." -ForegroundColor Cyan
-    & npm.cmd ci
+    Write-Host "Installing locked dependencies (uses local npm cache when possible)..." -ForegroundColor Cyan
+    # --prefer-offline: reuse cache; --no-audit/--no-fund: skip slow network extras.
+    # Same packages as plain "npm ci" — does not change what gets installed.
+    & npm.cmd ci --prefer-offline --no-audit --no-fund
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host "Cache-assisted install failed; retrying a clean npm ci..." -ForegroundColor DarkYellow
+      & npm.cmd ci --no-audit --no-fund
+    }
     if ($LASTEXITCODE -ne 0) {
       Stop-WithMessage "Dependency install failed. Close every POS/Chrome window, pause antivirus scanning of this folder, then run setup again."
     }
-    Set-Content -Path $StampFile -Value $LockHash -Encoding ASCII
   }
 
   Write-Host ""
-  Write-Host "Building the production POS..." -ForegroundColor Cyan
-  & npm.cmd run build
-  if ($LASTEXITCODE -ne 0) {
-    Stop-WithMessage "Production build failed. Review the error above."
+  if ($buildOk) {
+    Write-Host "Production build already matches this API URL - skipping rebuild." -ForegroundColor Green
+  } else {
+    Write-Host "Building the production POS..." -ForegroundColor Cyan
+    & npm.cmd run build
+    if ($LASTEXITCODE -ne 0) {
+      Stop-WithMessage "Production build failed. Review the error above."
+    }
+  }
+
+  Set-Content -Path $StampFile -Value @($LockHash, $ApiUrl) -Encoding ASCII
+  if (Test-Path $ModulesDir) {
+    Set-Content -Path $LegacyStampFile -Value $LockHash -Encoding ASCII
   }
 } finally {
   Pop-Location
@@ -193,5 +231,6 @@ Write-Host ""
 Write-Host "Local POS is ready." -ForegroundColor Green
 Write-Host "Desktop shortcut: $ShortcutPath"
 Write-Host "Cashiers only need to double-click '$PosAppTitle'."
+Write-Host "To copy to the shop without npm download: run Pack-Local-POS-For-Shop.bat"
 Write-Host ""
 Read-Host "Press Enter to close"

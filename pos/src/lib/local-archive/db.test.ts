@@ -62,7 +62,7 @@ afterEach(() => {
   }
 });
 
-describe("local SQLite archive", () => {
+describe("local order archive", () => {
   it("stores orders on disk and returns them instantly by search", () => {
     const root = tempRoot();
     roots.push(root);

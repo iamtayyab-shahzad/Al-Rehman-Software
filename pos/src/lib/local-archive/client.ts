@@ -18,7 +18,7 @@ function isBrowserLocalHost() {
   return host === "127.0.0.1" || host === "localhost";
 }
 
-/** Local SQLite archive only runs on the shop PC Next server. */
+/** Local file archive only runs on the shop PC Next server. */
 export function canUseLocalArchive() {
   return isBrowserLocalHost();
 }
@@ -60,7 +60,7 @@ function scheduleFlush(delayMs = 250) {
 }
 
 /**
- * Fire-and-forget durable write to the PC SQLite file.
+ * Fire-and-forget durable write to the PC archive file.
  * Batches rapid order updates so the till stays snappy.
  */
 export function mirrorOrdersToLocalArchive(orders: Order | Order[]) {

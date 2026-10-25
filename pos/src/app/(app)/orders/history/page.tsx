@@ -60,7 +60,7 @@ export default function OrderHistoryPage() {
 
   const filtered = useMemo(() => {
     const byId = new Map<string, Order>();
-    // Years of history from the PC SQLite file…
+    // Years of history from the PC archive file…
     for (const o of archiveOrders) {
       if (o?.id) byId.set(o.id, o);
     }

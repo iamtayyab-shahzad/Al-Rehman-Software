@@ -77,8 +77,8 @@ function LocalArchivePanel() {
       <section className="mb-8 rounded-xl border border-zinc-700 bg-zinc-950 p-5">
         <h2 className="text-xl font-bold text-zinc-100">PC order archive</h2>
         <p className="mt-1 text-sm text-zinc-400">
-          Long-term order storage (SQLite file) is available when you run the
-          local Al-rehman POS on this computer — not on the cloud emergency URL.
+          Long-term order storage (archive file on this PC) is available when you
+          run the local Al-rehman POS — not on the cloud emergency URL.
         </p>
       </section>
     );
@@ -88,7 +88,7 @@ function LocalArchivePanel() {
     <section className="mb-8 rounded-xl border border-emerald-500/40 bg-zinc-950 p-5">
       <h2 className="text-xl font-bold text-emerald-300">PC order archive</h2>
       <p className="mt-1 text-sm text-zinc-400">
-        Every order is copied into a SQLite file on this PC so years of sales
+        Every order is copied into an archive file on this PC so years of sales
         stay searchable even if the browser cache is cleared. Cloud sync still
         runs as usual.
       </p>
